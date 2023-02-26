@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0A25FD3529ABDAD50098A11C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A25FD3429ABDAD50098A11C /* AppDelegate.swift */; };
-		0A25FD3729ABDAD50098A11C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A25FD3629ABDAD50098A11C /* SceneDelegate.swift */; };
 		0A25FD3929ABDAD50098A11C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A25FD3829ABDAD50098A11C /* ViewController.swift */; };
 		0A25FD3C29ABDAD50098A11C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A25FD3A29ABDAD50098A11C /* Main.storyboard */; };
 		0A25FD3E29ABDADA0098A11C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A25FD3D29ABDADA0098A11C /* Assets.xcassets */; };
@@ -18,7 +17,6 @@
 /* Begin PBXFileReference section */
 		0A25FD3129ABDAD50098A11C /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A25FD3429ABDAD50098A11C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		0A25FD3629ABDAD50098A11C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		0A25FD3829ABDAD50098A11C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		0A25FD3B29ABDAD50098A11C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0A25FD3D29ABDADA0098A11C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -56,15 +54,46 @@
 		0A25FD3329ABDAD50098A11C /* ImageFeed */ = {
 			isa = PBXGroup;
 			children = (
+				0A25FD4829ABDC220098A11C /* Application */,
+				0A25FD4929ABDC380098A11C /* Screens */,
+				0A25FD4A29ABDC420098A11C /* Resources */,
+				0A25FD4B29ABDC510098A11C /* Supporting Files */,
+			);
+			path = ImageFeed;
+			sourceTree = "<group>";
+		};
+		0A25FD4829ABDC220098A11C /* Application */ = {
+			isa = PBXGroup;
+			children = (
 				0A25FD3429ABDAD50098A11C /* AppDelegate.swift */,
-				0A25FD3629ABDAD50098A11C /* SceneDelegate.swift */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		0A25FD4929ABDC380098A11C /* Screens */ = {
+			isa = PBXGroup;
+			children = (
 				0A25FD3829ABDAD50098A11C /* ViewController.swift */,
 				0A25FD3A29ABDAD50098A11C /* Main.storyboard */,
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
+		0A25FD4A29ABDC420098A11C /* Resources */ = {
+			isa = PBXGroup;
+			children = (
 				0A25FD3D29ABDADA0098A11C /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		0A25FD4B29ABDC510098A11C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
 				0A25FD3F29ABDADA0098A11C /* LaunchScreen.storyboard */,
 				0A25FD4229ABDADA0098A11C /* Info.plist */,
 			);
-			path = ImageFeed;
+			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -140,7 +169,6 @@
 			files = (
 				0A25FD3929ABDAD50098A11C /* ViewController.swift in Sources */,
 				0A25FD3529ABDAD50098A11C /* AppDelegate.swift in Sources */,
-				0A25FD3729ABDAD50098A11C /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,12 +317,13 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VEWJJ8ZGBW;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ImageFeed/Info.plist;
+				INFOPLIST_FILE = "ImageFeed/Supporting Files/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Image Feed";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -302,9 +331,12 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.vikhlyaev.ImageFeed;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -317,12 +349,13 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VEWJJ8ZGBW;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ImageFeed/Info.plist;
+				INFOPLIST_FILE = "ImageFeed/Supporting Files/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Image Feed";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -330,9 +363,12 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.vikhlyaev.ImageFeed;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
