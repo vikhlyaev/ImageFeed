@@ -22,7 +22,7 @@ final class ImagesListCell: UITableViewCell {
     }
     
     @IBAction private func likeButtonTapped(_ sender: UIButton) {
-        
+        print("likeButtonTapped")
     }
     
     private func addGradient() {
