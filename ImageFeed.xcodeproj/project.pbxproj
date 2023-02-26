@@ -8,20 +8,22 @@
 
 /* Begin PBXBuildFile section */
 		0A25FD3529ABDAD50098A11C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A25FD3429ABDAD50098A11C /* AppDelegate.swift */; };
-		0A25FD3929ABDAD50098A11C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A25FD3829ABDAD50098A11C /* ViewController.swift */; };
 		0A25FD3C29ABDAD50098A11C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A25FD3A29ABDAD50098A11C /* Main.storyboard */; };
 		0A25FD3E29ABDADA0098A11C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A25FD3D29ABDADA0098A11C /* Assets.xcassets */; };
 		0A25FD4129ABDADA0098A11C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A25FD3F29ABDADA0098A11C /* LaunchScreen.storyboard */; };
+		0A25FD4F29ABDE230098A11C /* ImagesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A25FD4D29ABDE230098A11C /* ImagesListViewController.swift */; };
+		0A25FD5029ABDE230098A11C /* ImagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A25FD4E29ABDE230098A11C /* ImagesListCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0A25FD3129ABDAD50098A11C /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A25FD3429ABDAD50098A11C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		0A25FD3829ABDAD50098A11C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		0A25FD3B29ABDAD50098A11C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0A25FD3D29ABDADA0098A11C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0A25FD4029ABDADA0098A11C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0A25FD4229ABDADA0098A11C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0A25FD4D29ABDE230098A11C /* ImagesListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagesListViewController.swift; sourceTree = "<group>"; };
+		0A25FD4E29ABDE230098A11C /* ImagesListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagesListCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,8 +75,8 @@
 		0A25FD4929ABDC380098A11C /* Screens */ = {
 			isa = PBXGroup;
 			children = (
-				0A25FD3829ABDAD50098A11C /* ViewController.swift */,
 				0A25FD3A29ABDAD50098A11C /* Main.storyboard */,
+				0A25FD4C29ABDE230098A11C /* ImagesList */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -94,6 +96,15 @@
 				0A25FD4229ABDADA0098A11C /* Info.plist */,
 			);
 			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		0A25FD4C29ABDE230098A11C /* ImagesList */ = {
+			isa = PBXGroup;
+			children = (
+				0A25FD4D29ABDE230098A11C /* ImagesListViewController.swift */,
+				0A25FD4E29ABDE230098A11C /* ImagesListCell.swift */,
+			);
+			path = ImagesList;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -167,7 +178,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A25FD3929ABDAD50098A11C /* ViewController.swift in Sources */,
+				0A25FD4F29ABDE230098A11C /* ImagesListViewController.swift in Sources */,
+				0A25FD5029ABDE230098A11C /* ImagesListCell.swift in Sources */,
 				0A25FD3529ABDAD50098A11C /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
