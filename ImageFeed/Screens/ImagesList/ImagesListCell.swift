@@ -11,7 +11,7 @@ final class ImagesListCell: UITableViewCell {
         }
     }
     
-    static let identifier = "ImagesListCell"
+    static let identifier = String(describing: ImagesListCell.self)
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
