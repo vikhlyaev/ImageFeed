@@ -144,10 +144,26 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="KN1-EX-563" userLabel="Image View">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Hh-rQ-Px4">
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                            </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QkH-Vf-sWF">
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="11" translatesAutoresizingMaskIntoConstraints="NO" id="2XW-qw-8al">
+                                        <rect key="frame" x="0.0" y="0.0" width="200" height="300"/>
+                                    </imageView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="2XW-qw-8al" secondAttribute="trailing" id="DFl-VD-4Gv"/>
+                                    <constraint firstItem="2XW-qw-8al" firstAttribute="leading" secondItem="5Hh-rQ-Px4" secondAttribute="leading" id="FmK-d8-c73"/>
+                                    <constraint firstItem="2XW-qw-8al" firstAttribute="top" secondItem="5Hh-rQ-Px4" secondAttribute="top" id="a5s-z6-RbS"/>
+                                    <constraint firstAttribute="bottom" secondItem="2XW-qw-8al" secondAttribute="bottom" id="nu2-q3-cfX"/>
+                                </constraints>
+                                <viewLayoutGuide key="contentLayoutGuide" id="XTv-wZ-oqM"/>
+                                <viewLayoutGuide key="frameLayoutGuide" id="1jm-cP-Ihv"/>
+                                <connections>
+                                    <outlet property="delegate" destination="jKm-hB-632" id="UgX-pT-FIA"/>
+                                </connections>
+                            </scrollView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QkH-Vf-sWF" userLabel="Back Button">
                                 <rect key="frame" x="16" y="56" width="24" height="24"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="24" id="pfO-2B-brJ"/>
@@ -163,22 +179,23 @@
                         <viewLayoutGuide key="safeArea" id="GfG-8E-Bgr"/>
                         <color key="backgroundColor" name="customBlack"/>
                         <constraints>
+                            <constraint firstItem="5Hh-rQ-Px4" firstAttribute="leading" secondItem="N7u-fj-BH1" secondAttribute="leading" id="85u-FC-SMU"/>
+                            <constraint firstAttribute="bottom" secondItem="5Hh-rQ-Px4" secondAttribute="bottom" id="LnE-HI-65p"/>
                             <constraint firstItem="QkH-Vf-sWF" firstAttribute="top" secondItem="N7u-fj-BH1" secondAttribute="top" constant="56" id="O7C-Da-PFy"/>
-                            <constraint firstAttribute="bottom" secondItem="KN1-EX-563" secondAttribute="bottom" id="PKG-j4-wvk"/>
-                            <constraint firstItem="GfG-8E-Bgr" firstAttribute="trailing" secondItem="KN1-EX-563" secondAttribute="trailing" id="URO-wJ-8uG"/>
-                            <constraint firstItem="KN1-EX-563" firstAttribute="leading" secondItem="GfG-8E-Bgr" secondAttribute="leading" id="bXw-C5-kja"/>
+                            <constraint firstItem="5Hh-rQ-Px4" firstAttribute="top" secondItem="N7u-fj-BH1" secondAttribute="top" id="VMs-e0-ky3"/>
+                            <constraint firstAttribute="trailing" secondItem="5Hh-rQ-Px4" secondAttribute="trailing" id="d38-dP-fOx"/>
                             <constraint firstItem="QkH-Vf-sWF" firstAttribute="leading" secondItem="GfG-8E-Bgr" secondAttribute="leading" constant="16" id="kYk-HK-VTI"/>
-                            <constraint firstItem="KN1-EX-563" firstAttribute="top" secondItem="N7u-fj-BH1" secondAttribute="top" id="zZi-rh-uo7"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="TPn-xl-Zky"/>
                     <connections>
-                        <outlet property="imageView" destination="KN1-EX-563" id="cCa-D4-XSI"/>
+                        <outlet property="imageView" destination="2XW-qw-8al" id="YKZ-BC-xi8"/>
+                        <outlet property="scrollView" destination="5Hh-rQ-Px4" id="qHe-33-eLA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cRj-GF-xbZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="898" y="-396"/>
+            <point key="canvasLocation" x="896.94656488549617" y="-396.47887323943667"/>
         </scene>
         <!--Profile View Controller-->
         <scene sceneID="xxc-yj-1ZI">
@@ -294,6 +311,7 @@
     </scenes>
     <resources>
         <image name="0" width="200" height="132"/>
+        <image name="11" width="200" height="300"/>
         <image name="BackButton" width="24" height="24"/>
         <image name="LikeButtonActive" width="30" height="26"/>
         <image name="LogOutButton" width="24" height="24"/>
