@@ -1,12 +1,15 @@
 {
   "images" : [
     {
-      "filename" : "rodrigo-rodrigues-wolf-r-t-naIVVvYbDzU-unsplash.jpg",
+      "filename" : "Sharing.svg",
       "idiom" : "universal"
     }
   ],
   "info" : {
     "author" : "xcode",
     "version" : 1
+  },
+  "properties" : {
+    "preserves-vector-representation" : true
   }
 }
