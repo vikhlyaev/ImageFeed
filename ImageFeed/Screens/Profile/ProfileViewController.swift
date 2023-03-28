@@ -93,10 +93,10 @@ extension ProfileViewController {
         NSLayoutConstraint.activate([
             photoAndLogOutButtonStackView.topAnchor.constraint(equalTo: contentStackView.topAnchor),
             photoAndLogOutButtonStackView.leadingAnchor.constraint(equalTo: contentStackView.leadingAnchor),
-            photoAndLogOutButtonStackView.trailingAnchor.constraint(equalTo: contentStackView.trailingAnchor, constant: -8),
+            photoAndLogOutButtonStackView.trailingAnchor.constraint(equalTo: contentStackView.trailingAnchor),
 
-            logOutButton.widthAnchor.constraint(equalToConstant: 24),
-            logOutButton.heightAnchor.constraint(equalToConstant: 24),
+            logOutButton.widthAnchor.constraint(equalToConstant: 44),
+            logOutButton.heightAnchor.constraint(equalToConstant: 44),
             
             contentStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
             contentStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
