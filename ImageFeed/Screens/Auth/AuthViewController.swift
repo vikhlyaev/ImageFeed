@@ -2,7 +2,7 @@ import UIKit
 
 final class AuthViewController: UIViewController {
 
-    let segueIdentifier = "ShowWebView"
+    private let segueIdentifier = "ShowWebView"
     
     override func viewDidLoad() {
         super.viewDidLoad()
