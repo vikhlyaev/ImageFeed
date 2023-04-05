@@ -39,7 +39,7 @@ final class WebViewViewController: UIViewController {
     }
     
     private func prepareURL() -> URL? {
-        guard var urlComponents = URLComponents(string: Constants.unsplashAuthorizeURLString) else { return nil }
+        guard var urlComponents = URLComponents(string: Constants.authorizeURLString) else { return nil }
         urlComponents.queryItems = [
             URLQueryItem(name: "client_id", value: Constants.accessKey),
             URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
