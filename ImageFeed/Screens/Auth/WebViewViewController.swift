@@ -12,7 +12,7 @@ final class WebViewViewController: UIViewController {
     
     weak var delegate: WebViewViewControllerDelegate?
     
-    private let authService = OAuth2Service()
+    private let authService = OAuthService()
     
     override func viewDidLoad() {
         super.viewDidLoad()
