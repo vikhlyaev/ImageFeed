@@ -43,8 +43,6 @@ final class SplashViewController: UIViewController {
             super.prepare(for: segue, sender: sender)
         }
     }
-    
-    
 }
 
 // MARK: - AuthViewControllerDelegate
@@ -61,8 +59,9 @@ extension SplashViewController: AuthViewControllerDelegate {
             switch result {
             case .success:
                 self?.switchToTabBarController()
-            case .failure:
-                break
+            case .failure(let error):
+                // временный принт
+                print(error)
             }
         }
     }
