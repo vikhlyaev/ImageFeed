@@ -50,8 +50,7 @@ final class SplashViewController: UIViewController {
 
 extension SplashViewController: AuthViewControllerDelegate {
     func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
-        ProgressHUD.animationType = .singleCirclePulse
-        ProgressHUD.show()
+        UIBlockingProgressHUB.show()
         dismiss(animated: true) { [weak self] in
             self?.fetchOAuthToken(code)
         }
@@ -62,7 +61,7 @@ extension SplashViewController: AuthViewControllerDelegate {
             switch result {
             case .success:
                 self?.switchToTabBarController()
-                ProgressHUD.dismiss()
+                UIBlockingProgressHUB.dismiss()
             case .failure(let error):
                 // временный принт
                 print(error)
