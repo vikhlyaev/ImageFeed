@@ -2,6 +2,14 @@ import Foundation
 
 final class OAuthService {
     
+    private let session: URLSession
+    private let decoder: JSONDecoder
+    
+    init(session: URLSession = URLSession.shared, decoder: JSONDecoder = JSONDecoder()) {
+        self.session = session
+        self.decoder = decoder
+    }
+    
     func fetchAuthToken(_ code: String, completion: @escaping (Result<String, NetworkError>) -> Void) {
         let fulfillCompletion: (Result<String, NetworkError>) -> Void = { result in
             DispatchQueue.main.async {
@@ -28,12 +36,11 @@ final class OAuthService {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         
-        URLSession.shared.dataTask(with: request) { data, response, error in
+        session.dataTask(with: request) { [weak self] data, response, error in
             if let data = data, let response = response, let statusCode = (response as? HTTPURLResponse)?.statusCode {
                 if 200 ..< 300 ~= statusCode {
-                    let decoder = JSONDecoder()
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    if let model = try? decoder.decode(OAuthTokenResponseBody.self, from: data) {
+                    self?.decoder.keyDecodingStrategy = .convertFromSnakeCase
+                    if let model = try? self?.decoder.decode(OAuthTokenResponseBody.self, from: data) {
                         fulfillCompletion(.success(model.accessToken))
                     }
                 } else {
