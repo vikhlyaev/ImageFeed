@@ -18,6 +18,7 @@ final class SingleImageViewController: UIViewController {
         
         updateUI()
         setZoomScales()
+        setupScrollView()
     }
     
     @IBAction func backButtonTapped(_ sender: UIButton) {
@@ -34,6 +35,10 @@ final class SingleImageViewController: UIViewController {
         imageView.image = image
         guard let image = image else { return }
         rescaleAndCenterImageInScrollView(image: image)
+    }
+    
+    private func setupScrollView() {
+        scrollView.contentInsetAdjustmentBehavior = .never
     }
     
     private func setZoomScales() {
