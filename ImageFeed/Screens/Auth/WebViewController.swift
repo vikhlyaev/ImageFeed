@@ -1,22 +1,22 @@
 import UIKit
 import WebKit
 
-protocol WebViewViewControllerDelegate: AnyObject {
-    func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String)
-    func webViewViewControllerDidCancel(_ vc: WebViewViewController)
+protocol WebViewControllerDelegate: AnyObject {
+    func webViewController(_ vc: WebViewController, didAuthenticateWithCode code: String)
+    func webViewControllerDidCancel(_ vc: WebViewController)
 }
 
-final class WebViewViewController: UIViewController {
+final class WebViewController: UIViewController {
     @IBOutlet private weak var webView: WKWebView!
     @IBOutlet private weak var progressView: UIProgressView!
     
-    weak var delegate: WebViewViewControllerDelegate?
+    weak var delegate: WebViewControllerDelegate?
     
     private let authService = OAuthService()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setDelegates()
+        setWebViewDelegate()
         loadAuthorization()
     }
     
@@ -32,10 +32,10 @@ final class WebViewViewController: UIViewController {
     }
     
     @IBAction private func backButtonTapped(_ sender: UIButton) {
-        delegate?.webViewViewControllerDidCancel(self)
+        delegate?.webViewControllerDidCancel(self)
     }
     
-    private func setDelegates() {
+    private func setWebViewDelegate() {
         webView.navigationDelegate = self
     }
     
@@ -80,10 +80,10 @@ final class WebViewViewController: UIViewController {
 
 // MARK: - WKNavigationDelegate
 
-extension WebViewViewController: WKNavigationDelegate {
+extension WebViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if let code = code(from: navigationAction) {
-            delegate?.webViewViewController(self, didAuthenticateWithCode: code)
+            delegate?.webViewController(self, didAuthenticateWithCode: code)
             decisionHandler(.cancel)
         } else {
             decisionHandler(.allow)

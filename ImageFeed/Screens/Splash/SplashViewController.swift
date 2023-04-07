@@ -63,7 +63,7 @@ extension SplashViewController: AuthViewControllerDelegate {
                 self?.switchToTabBarController()
                 UIBlockingProgressHUB.dismiss()
             case .failure(let error):
-                // временный принт
+                // TODO: временный принт
                 print(error)
             }
         }
