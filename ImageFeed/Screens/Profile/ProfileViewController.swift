@@ -30,7 +30,6 @@ final class ProfileViewController: UIViewController {
     
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
-        label.text = "Екатерина Новикова"
         label.font = .systemFont(ofSize: 23, weight: .bold)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -39,7 +38,6 @@ final class ProfileViewController: UIViewController {
     
     private lazy var usernameLabel: UILabel = {
         let label = UILabel()
-        label.text = "@ekaterina_nov"
         label.font = .systemFont(ofSize: 13)
         label.textColor = UIColor(named: "customGrey")
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -48,7 +46,6 @@ final class ProfileViewController: UIViewController {
     
     private lazy var infoLabel: UILabel = {
         let label = UILabel()
-        label.text = "Hello, world!"
         label.numberOfLines = 0
         label.font = .systemFont(ofSize: 13)
         label.textColor = .white
@@ -69,10 +66,16 @@ final class ProfileViewController: UIViewController {
         return stackView
     }()
     
+    private let profileService = ProfileService.shared
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
         setConstraints()
+        
+        if let profile = profileService.profile {
+            updateUI(from: profile)
+        }
     }
     
     private func setupView() {
@@ -83,6 +86,12 @@ final class ProfileViewController: UIViewController {
     @objc
     private func logOutTapped() {
         print("logOutTapped")
+    }
+    
+    func updateUI(from profile: Profile) {
+        nameLabel.text = profile.name
+        usernameLabel.text = profile.loginName
+        infoLabel.text = profile.bio
     }
 }
 
