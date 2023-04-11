@@ -1,10 +1,11 @@
 import UIKit
+import Kingfisher
+
 
 final class ProfileViewController: UIViewController {
     
     private lazy var photoImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "ProfilePhoto")
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -107,8 +108,8 @@ final class ProfileViewController: UIViewController {
             let profileImageURL = ProfileImageService.shared.avatarURL,
             let url = URL(string: profileImageURL)
         else { return }
-        print(url)
-        // TODO: Обновить аватар, используя Kingfisher
+        let processor = RoundCornerImageProcessor(cornerRadius: 35)
+        photoImageView.kf.setImage(with: url, options: [.processor(processor)])
     }
     
     @objc
@@ -122,13 +123,16 @@ final class ProfileViewController: UIViewController {
 extension ProfileViewController {
     private func setConstraints() {
         NSLayoutConstraint.activate([
-            photoAndLogOutButtonStackView.topAnchor.constraint(equalTo: contentStackView.topAnchor),
-            photoAndLogOutButtonStackView.leadingAnchor.constraint(equalTo: contentStackView.leadingAnchor),
-            photoAndLogOutButtonStackView.trailingAnchor.constraint(equalTo: contentStackView.trailingAnchor),
+            photoImageView.heightAnchor.constraint(equalToConstant: 70),
+            photoImageView.widthAnchor.constraint(equalToConstant: 70),
             
             logOutButton.widthAnchor.constraint(equalToConstant: 44),
             logOutButton.heightAnchor.constraint(equalToConstant: 44),
             
+            photoAndLogOutButtonStackView.topAnchor.constraint(equalTo: contentStackView.topAnchor),
+            photoAndLogOutButtonStackView.leadingAnchor.constraint(equalTo: contentStackView.leadingAnchor),
+            photoAndLogOutButtonStackView.trailingAnchor.constraint(equalTo: contentStackView.trailingAnchor),
+
             contentStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
             contentStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             contentStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16)
