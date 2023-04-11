@@ -68,14 +68,15 @@ final class ProfileViewController: UIViewController {
     
     private let profileService = ProfileService.shared
     
+    private var profileImageServiceObserver: NSObjectProtocol?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
         setConstraints()
-        
-        if let profile = profileService.profile {
-            updateUI(from: profile)
-        }
+        addProfileAvatarObserver()
+        updateUI(from: profileService.profile)
+        updateAvatar()
     }
     
     private func setupView() {
@@ -88,10 +89,31 @@ final class ProfileViewController: UIViewController {
         print("logOutTapped")
     }
     
-    func updateUI(from profile: Profile) {
+    private func updateUI(from profile: Profile?) {
+        guard let profile else { return }
         nameLabel.text = profile.name
         usernameLabel.text = profile.loginName
         infoLabel.text = profile.bio
+    }
+    
+    private func addProfileAvatarObserver() {
+        profileImageServiceObserver = NotificationCenter.default
+            .addObserver(
+                forName: ProfileImageService.DidChangeNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                self?.updateAvatar()
+            }
+    }
+    
+    private func updateAvatar() {
+        guard
+            let profileImageURL = ProfileImageService.shared.avatarURL,
+            let url = URL(string: profileImageURL)
+        else { return }
+        print(url)
+        // TODO: Обновить аватар, используя Kingfisher
     }
 }
 
@@ -103,7 +125,7 @@ extension ProfileViewController {
             photoAndLogOutButtonStackView.topAnchor.constraint(equalTo: contentStackView.topAnchor),
             photoAndLogOutButtonStackView.leadingAnchor.constraint(equalTo: contentStackView.leadingAnchor),
             photoAndLogOutButtonStackView.trailingAnchor.constraint(equalTo: contentStackView.trailingAnchor),
-
+            
             logOutButton.widthAnchor.constraint(equalToConstant: 44),
             logOutButton.heightAnchor.constraint(equalToConstant: 44),
             
