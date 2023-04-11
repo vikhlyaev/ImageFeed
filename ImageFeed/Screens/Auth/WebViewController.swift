@@ -9,7 +9,7 @@ protocol WebViewControllerDelegate: AnyObject {
 final class WebViewController: UIViewController {
     @IBOutlet private weak var webView: WKWebView!
     @IBOutlet private weak var progressView: UIProgressView!
-    
+    private var estimatedProgressObservation: NSKeyValueObservation?
     private let authService = OAuthService()
     
     weak var delegate: WebViewControllerDelegate?
@@ -24,19 +24,6 @@ final class WebViewController: UIViewController {
         super.viewWillAppear(animated)
         addObserverProgress()
         updateProgress()
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        removeObserverProgress()
-    }
-    
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == #keyPath(WKWebView.estimatedProgress) {
-            updateProgress()
-        } else {
-            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
-        }
     }
     
     @IBAction private func backButtonTapped(_ sender: UIButton) {
@@ -69,13 +56,14 @@ final class WebViewController: UIViewController {
     }
     
     private func addObserverProgress() {
-        webView.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
+        estimatedProgressObservation = webView.observe(
+            \.estimatedProgress,
+             options: [],
+             changeHandler: { [weak self] _, _ in
+                 self?.updateProgress()
+             })
     }
     
-    private func removeObserverProgress() {
-        webView.removeObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), context: nil)
-    }
-
     private func updateProgress() {
         progressView.progress = Float(webView.estimatedProgress)
         progressView.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
@@ -85,7 +73,9 @@ final class WebViewController: UIViewController {
 // MARK: - WKNavigationDelegate
 
 extension WebViewController: WKNavigationDelegate {
-    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+    func webView(_ webView: WKWebView,
+                 decidePolicyFor navigationAction: WKNavigationAction,
+                 decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if let code = code(from: navigationAction) {
             delegate?.webViewController(self, didAuthenticateWithCode: code)
             decisionHandler(.cancel)
