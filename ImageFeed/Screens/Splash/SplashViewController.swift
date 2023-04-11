@@ -3,6 +3,14 @@ import ProgressHUD
 
 final class SplashViewController: UIViewController {
     
+    private lazy var logoImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "YandexPracticum")
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
     private let segueIdentifier = "ShowAuthenticationScreenSegueIdentifier"
     private let oauthService = OAuthService()
     private let oauthTokenStorage = OAuthTokenStorage()
@@ -17,21 +25,20 @@ final class SplashViewController: UIViewController {
         super.viewWillAppear(animated)
         setNeedsStatusBarAppearanceUpdate()
     }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+        setConstraints()
+    }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == segueIdentifier {
-            guard
-                let navigationController = segue.destination as? UINavigationController,
-                let viewController = navigationController.viewControllers.first as? AuthViewController
-            else { fatalError("Failed to prepare for \(segueIdentifier)") }
-            viewController.delegate = self
-        } else {
-            super.prepare(for: segue, sender: sender)
-        }
+    private func setupView() {
+        view.backgroundColor = UIColor(named: "customBlack")
+        view.addSubview(logoImageView)
     }
     
     private func switchToTabBarController() {
@@ -45,7 +52,11 @@ final class SplashViewController: UIViewController {
         if let token = oauthTokenStorage.token {
             fetchProfile(token: token)
         } else {
-            performSegue(withIdentifier: segueIdentifier, sender: nil)
+            let authViewController = AuthViewController()
+            let navigationController = UINavigationController(rootViewController: authViewController)
+            authViewController.delegate = self
+            navigationController.modalPresentationStyle = .fullScreen
+            present(navigationController, animated: true)
         }
     }
     
@@ -96,5 +107,16 @@ extension SplashViewController: AuthViewControllerDelegate {
                 showErrorAlert()
             }
         }
+    }
+}
+
+// MARK: - Setting Constraints
+
+extension SplashViewController {
+    private func setConstraints() {
+        NSLayoutConstraint.activate([
+            logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            logoImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
     }
 }
