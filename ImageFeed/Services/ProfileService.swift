@@ -1,36 +1,44 @@
 import Foundation
 
 final class ProfileService {
-    
+    static let shared = ProfileService()
     private let session: URLSession
     private let decoder: JSONDecoder
     private var task: URLSessionTask?
     private(set) var profile: Profile?
-    
-    static let shared = ProfileService()
     
     private init() {
         self.session = URLSession.shared
         self.decoder = JSONDecoder()
     }
     
-    func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
-        assert(Thread.isMainThread)
+    private func prepareRequest() -> URLRequest? {
+        guard let token = OAuthTokenStorage().token,
+              var url = Constants.baseURL
+        else { return nil }
         
-        let fulfillCompletion: (Result<Profile, Error>) -> Void = { result in
-            DispatchQueue.main.async {
-                completion(result)
-            }
-        }
-        guard var url = Constants.baseURL else { return }
         if #available(iOS 16.0, *) {
             url.append(path: "/me")
         } else {
             url.appendPathComponent("/me")
         }
+        
         var request = URLRequest(url: url)
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.httpMethod = "GET"
+        return request
+    }
+    
+    func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
+        assert(Thread.isMainThread)
+        
+        guard let request = prepareRequest() else { return }
+       
+        let fulfillCompletion: (Result<Profile, Error>) -> Void = { result in
+            DispatchQueue.main.async {
+                completion(result)
+            }
+        }
         
         let task = session.dataTask(with: request) { [weak self] data, response, error in
             guard let self else { return }
@@ -55,6 +63,7 @@ final class ProfileService {
                 fulfillCompletion(.failure(NetworkError.urlSessionError))
             }
         }
+        
         self.task = task
         task.resume()
     }

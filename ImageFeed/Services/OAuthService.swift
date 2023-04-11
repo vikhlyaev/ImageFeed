@@ -1,7 +1,6 @@
 import Foundation
 
 final class OAuthService {
-    
     private let session: URLSession
     private let decoder: JSONDecoder
     private var lastCode: String?
@@ -12,21 +11,41 @@ final class OAuthService {
         self.decoder = decoder
     }
     
-    func fetchAuthToken(_ code: String, completion: @escaping (Result<String, Error>) -> Void) {
-        assert(Thread.isMainThread)
-        
+    private func prepareRequest(code: String) -> URLRequest? {
+        guard let url = Constants.tokenURLString,
+              var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true)
+        else { return nil }
+        urlComponents.queryItems = [
+            URLQueryItem(name: "client_id", value: Constants.accessKey),
+            URLQueryItem(name: "client_secret", value: Constants.secretKey),
+            URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
+            URLQueryItem(name: "code", value: code),
+            URLQueryItem(name: "grant_type", value: "authorization_code")
+        ]
+        guard let url = urlComponents.url else { return nil }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        return request
+    }
+    
+    private func checkLastCode(code: String) {
         if lastCode == code { return }
         task?.cancel()
         lastCode = code
+    }
+    
+    func fetchAuthToken(_ code: String, completion: @escaping (Result<String, Error>) -> Void) {
+        assert(Thread.isMainThread)
+        
+        guard let request = prepareRequest(code: code) else { return }
         
         let fulfillCompletion: (Result<String, Error>) -> Void = { result in
             DispatchQueue.main.async {
                 completion(result)
             }
         }
-        
-        guard let url = try? prepareURL(code: code) else { completion(.failure(NetworkError.badURL)); return }
-        let request = makeRequest(url: url)
+
+        checkLastCode(code: code)
         
         let task = session.dataTask(with: request) { [weak self] data, response, error in
             if let data = data, let response = response, let statusCode = (response as? HTTPURLResponse)?.statusCode {
@@ -50,31 +69,10 @@ final class OAuthService {
         self.task = task
         task.resume()
     }
-    
-    private func prepareURL(code: String) throws -> URL {
-        guard var urlComponents = URLComponents(string: Constants.tokenURLString) else { throw NetworkError.badURLComponents }
-        urlComponents.queryItems = [
-            URLQueryItem(name: "client_id", value: Constants.accessKey),
-            URLQueryItem(name: "client_secret", value: Constants.secretKey),
-            URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
-            URLQueryItem(name: "code", value: code),
-            URLQueryItem(name: "grant_type", value: "authorization_code")
-        ]
-        guard let url = urlComponents.url else { throw NetworkError.badURL }
-        return url
-    }
-    
-    private func makeRequest(url: URL) -> URLRequest {
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        return request
-    }
 }
 
 enum NetworkError: Error {
     case httpStatusCode(Int)
     case urlRequestError(Error)
     case urlSessionError
-    case badURLComponents
-    case badURL
 }
