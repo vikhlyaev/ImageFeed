@@ -84,11 +84,6 @@ final class ProfileViewController: UIViewController {
         view.addSubview(contentStackView)
     }
     
-    @objc
-    private func logOutTapped() {
-        print("logOutTapped")
-    }
-    
     private func updateUI(from profile: Profile?) {
         guard let profile else { return }
         nameLabel.text = profile.name
@@ -114,6 +109,11 @@ final class ProfileViewController: UIViewController {
         else { return }
         print(url)
         // TODO: Обновить аватар, используя Kingfisher
+    }
+    
+    @objc
+    private func logOutTapped() {
+        print("logOutTapped")
     }
 }
 
