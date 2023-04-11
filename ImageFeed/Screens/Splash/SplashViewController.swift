@@ -5,8 +5,8 @@ final class SplashViewController: UIViewController {
     
     private let segueIdentifier = "ShowAuthenticationScreenSegueIdentifier"
     private let oauthService = OAuthService()
-    private let profileService = ProfileService.shared
     private let oauthTokenStorage = OAuthTokenStorage()
+    private let profileService = ProfileService.shared
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -48,6 +48,22 @@ final class SplashViewController: UIViewController {
             performSegue(withIdentifier: segueIdentifier, sender: nil)
         }
     }
+    
+    private func fetchProfile(token: String) {
+        profileService.fetchProfile(token) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let profile):
+                UIBlockingProgressHUB.dismiss()
+                ProfileImageService.shared.fetchProfileImageURL(username: profile.username) { _ in }
+                self.switchToTabBarController()
+            case .failure(let error):
+                UIBlockingProgressHUB.dismiss()
+                // TODO: временный принт
+                print(error)
+            }
+        }
+    }
 }
 
 // MARK: - AuthViewControllerDelegate
@@ -62,25 +78,11 @@ extension SplashViewController: AuthViewControllerDelegate {
 
     private func fetchOAuthToken(_ code: String) {
         oauthService.fetchAuthToken(code) { [weak self] result in
-            switch result {
-            case .success(let token):
-                self?.oauthTokenStorage.token = token
-                self?.fetchProfile(token: token)
-            case .failure(let error):
-                UIBlockingProgressHUB.dismiss()
-                // TODO: временный принт
-                print(error)
-            }
-        }
-    }
-    
-    private func fetchProfile(token: String) {
-        profileService.fetchProfile(token) { [weak self] result in
             guard let self else { return }
             switch result {
-            case .success:
-                UIBlockingProgressHUB.dismiss()
-                self.switchToTabBarController()
+            case .success(let token):
+                self.oauthTokenStorage.token = token
+                self.fetchProfile(token: token)
             case .failure(let error):
                 UIBlockingProgressHUB.dismiss()
                 // TODO: временный принт
