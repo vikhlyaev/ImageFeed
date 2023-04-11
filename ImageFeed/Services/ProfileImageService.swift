@@ -41,8 +41,8 @@ final class ProfileImageService {
             guard let self else { return }
             switch result {
             case .success(let model):
-                сompletionOnMainQueue(.success(model.profileImage.small))
-                self.avatarURL = model.profileImage.small
+                сompletionOnMainQueue(.success(model.profileImage.medium))
+                self.avatarURL = model.profileImage.medium
                 self.task = nil
                 guard let avatarURL else { return }
                 NotificationCenter.default
