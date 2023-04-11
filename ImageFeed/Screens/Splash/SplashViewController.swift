@@ -57,12 +57,20 @@ final class SplashViewController: UIViewController {
                 UIBlockingProgressHUB.dismiss()
                 ProfileImageService.shared.fetchProfileImageURL(username: profile.username) { _ in }
                 self.switchToTabBarController()
-            case .failure(let error):
+            case .failure:
                 UIBlockingProgressHUB.dismiss()
-                // TODO: временный принт
-                print(error)
+                showErrorAlert()
             }
         }
+    }
+    
+    private func showErrorAlert() {
+        let alert = UIAlertController(title: "Что-то пошло не так(",
+                                      message: "Не удалось войти в систему",
+                                      preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default)
+        alert.addAction(okAction)
+        present(alert, animated: true)
     }
 }
 
@@ -83,10 +91,9 @@ extension SplashViewController: AuthViewControllerDelegate {
             case .success(let token):
                 self.oauthTokenStorage.token = token
                 self.fetchProfile(token: token)
-            case .failure(let error):
+            case .failure:
                 UIBlockingProgressHUB.dismiss()
-                // TODO: временный принт
-                print(error)
+                showErrorAlert()
             }
         }
     }
