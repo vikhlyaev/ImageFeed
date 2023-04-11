@@ -1,15 +1,8 @@
 import Foundation
 
 final class OAuthService {
-    private let session: URLSession
-    private let decoder: JSONDecoder
     private var lastCode: String?
     private var task: URLSessionTask?
-    
-    init(session: URLSession = URLSession.shared, decoder: JSONDecoder = JSONDecoder()) {
-        self.session = session
-        self.decoder = decoder
-    }
     
     private func prepareRequest(code: String) -> URLRequest? {
         guard let url = Constants.tokenURLString,
@@ -39,7 +32,7 @@ final class OAuthService {
         
         guard let request = prepareRequest(code: code) else { return }
         
-        let fulfillCompletion: (Result<String, Error>) -> Void = { result in
+        let сompletionOnMainQueue: (Result<String, Error>) -> Void = { result in
             DispatchQueue.main.async {
                 completion(result)
             }
@@ -47,21 +40,14 @@ final class OAuthService {
 
         checkLastCode(code: code)
         
-        let task = session.dataTask(with: request) { [weak self] data, response, error in
-            if let data = data, let response = response, let statusCode = (response as? HTTPURLResponse)?.statusCode {
-                if 200 ..< 300 ~= statusCode {
-                    self?.decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    if let model = try? self?.decoder.decode(OAuthTokenResponseBody.self, from: data) {
-                        fulfillCompletion(.success(model.accessToken))
-                        self?.task = nil
-                    }
-                } else {
-                    fulfillCompletion(.failure(NetworkError.httpStatusCode(statusCode)))
-                }
-            } else if let error = error {
-                fulfillCompletion(.failure(NetworkError.urlRequestError(error)))
-            } else {
-                fulfillCompletion(.failure(NetworkError.urlSessionError))
+        let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
+            switch result {
+            case .success(let model):
+                let token = model.accessToken
+                сompletionOnMainQueue(.success(token))
+                self?.task = nil
+            case .failure(let error):
+                сompletionOnMainQueue(.failure(error))
                 self?.lastCode = nil
             }
         }

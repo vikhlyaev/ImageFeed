@@ -2,15 +2,10 @@ import Foundation
 
 final class ProfileService {
     static let shared = ProfileService()
-    private let session: URLSession
-    private let decoder: JSONDecoder
     private var task: URLSessionTask?
     private(set) var profile: Profile?
     
-    private init() {
-        self.session = URLSession.shared
-        self.decoder = JSONDecoder()
-    }
+    private init() {}
     
     private func prepareRequest() -> URLRequest? {
         guard let token = OAuthTokenStorage().token,
@@ -34,33 +29,24 @@ final class ProfileService {
         
         guard let request = prepareRequest() else { return }
        
-        let fulfillCompletion: (Result<Profile, Error>) -> Void = { result in
+        let сompletionOnMainQueue: (Result<Profile, Error>) -> Void = { result in
             DispatchQueue.main.async {
                 completion(result)
             }
         }
         
-        let task = session.dataTask(with: request) { [weak self] data, response, error in
-            guard let self else { return }
-            if let data = data, let response = response, let statusCode = (response as? HTTPURLResponse)?.statusCode {
-                if 200 ..< 300 ~= statusCode {
-                    self.decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    if let model = try? self.decoder.decode(ProfileResult.self, from: data) {
-                        let profile = Profile(username: model.username,
-                                              firstName: model.firstName,
-                                              lastName: model.lastName,
-                                              bio: model.bio ?? "")
-                        fulfillCompletion(.success(profile))
-                        self.profile = profile
-                        self.task = nil
-                    }
-                } else {
-                    fulfillCompletion(.failure(NetworkError.httpStatusCode(statusCode)))
-                }
-            } else if let error = error {
-                fulfillCompletion(.failure(NetworkError.urlRequestError(error)))
-            } else {
-                fulfillCompletion(.failure(NetworkError.urlSessionError))
+        let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<ProfileResult, Error>) in
+            switch result {
+            case .success(let model):
+                let profile = Profile(username: model.username,
+                                      firstName: model.firstName,
+                                      lastName: model.lastName,
+                                      bio: model.bio ?? "")
+                сompletionOnMainQueue(.success(profile))
+                self?.profile = profile
+                self?.task = nil
+            case .failure(let error):
+                сompletionOnMainQueue(.failure(error))
             }
         }
         

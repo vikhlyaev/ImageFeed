@@ -2,17 +2,12 @@ import Foundation
 
 final class ProfileImageService {
     static let shared = ProfileImageService()
-    private let session: URLSession
-    private let decoder: JSONDecoder
     private var task: URLSessionTask?
     private(set) var avatarURL: String?
     
     static let DidChangeNotification = Notification.Name("ProfileImageProviderDidChange")
     
-    private init() {
-        self.session = URLSession.shared
-        self.decoder = JSONDecoder()
-    }
+    private init() {}
     
     private func prepareRequest(username: String) -> URLRequest? {
         guard let token = OAuthTokenStorage().token,
@@ -36,35 +31,27 @@ final class ProfileImageService {
         
         guard let request = prepareRequest(username: username) else { return }
         
-        let fulfillCompletion: (Result<String, Error>) -> Void = { result in
+        let сompletionOnMainQueue: (Result<String, Error>) -> Void = { result in
             DispatchQueue.main.async {
                 completion(result)
             }
         }
         
-        let task = session.dataTask(with: request) { [weak self] data, response, error in
+        let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<UserResult, Error>) in
             guard let self else { return }
-            if let data = data, let response = response, let statusCode = (response as? HTTPURLResponse)?.statusCode {
-                if 200 ..< 300 ~= statusCode {
-                    self.decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    if let model = try? self.decoder.decode(UserResult.self, from: data) {
-                        fulfillCompletion(.success(model.profileImage.small))
-                        self.avatarURL = model.profileImage.small
-                        self.task = nil
-                        guard let avatarURL else { return }
-                        NotificationCenter.default
-                            .post(
-                                name: ProfileImageService.DidChangeNotification,
-                                object: self,
-                                userInfo: ["URL": avatarURL])
-                    }
-                } else {
-                    fulfillCompletion(.failure(NetworkError.httpStatusCode(statusCode)))
-                }
-            } else if let error = error {
-                fulfillCompletion(.failure(NetworkError.urlRequestError(error)))
-            } else {
-                fulfillCompletion(.failure(NetworkError.urlSessionError))
+            switch result {
+            case .success(let model):
+                сompletionOnMainQueue(.success(model.profileImage.small))
+                self.avatarURL = model.profileImage.small
+                self.task = nil
+                guard let avatarURL else { return }
+                NotificationCenter.default
+                    .post(
+                        name: ProfileImageService.DidChangeNotification,
+                        object: self,
+                        userInfo: ["URL": avatarURL])
+            case .failure(let error):
+                сompletionOnMainQueue(.failure(error))
             }
         }
         
