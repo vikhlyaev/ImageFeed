@@ -13,7 +13,7 @@
         <!--Auth View Controller-->
         <scene sceneID="BYl-ep-qJe">
             <objects>
-                <viewController id="Uen-pQ-lyQ" customClass="AuthViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AuthViewController" id="Uen-pQ-lyQ" customClass="AuthViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="eOY-we-i0Q">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -345,25 +345,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Llb-Z8-Rg2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="320" y="-429"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="3tj-K8-WJ3">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="w37-7M-oSE" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationItem key="navigationItem" id="7WO-cn-P3O"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Zka-a2-B5u">
-                        <rect key="frame" x="0.0" y="47" width="390" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="Uen-pQ-lyQ" kind="relationship" relationship="rootViewController" id="NGI-HW-J5u"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="vxD-t5-20f" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-460" y="-1125"/>
         </scene>
     </scenes>
     <resources>
