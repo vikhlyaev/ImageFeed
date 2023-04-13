@@ -44,7 +44,7 @@ final class ProfileImageService {
                 сompletionOnMainQueue(.success(model.profileImage.medium))
                 self.avatarURL = model.profileImage.medium
                 self.task = nil
-                guard let avatarURL else { return }
+                let avatarURL = model.profileImage.medium
                 NotificationCenter.default
                     .post(
                         name: ProfileImageService.DidChangeNotification,

@@ -73,7 +73,7 @@ final class SplashViewController: UIViewController {
                 self.switchToTabBarController()
             case .failure:
                 UIBlockingProgressHUB.dismiss()
-                showErrorAlert()
+                self.showErrorAlert()
             }
         }
     }
@@ -107,7 +107,7 @@ extension SplashViewController: AuthViewControllerDelegate {
                 self.fetchProfile(token: token)
             case .failure:
                 UIBlockingProgressHUB.dismiss()
-                showErrorAlert()
+                self.showErrorAlert()
             }
         }
     }
