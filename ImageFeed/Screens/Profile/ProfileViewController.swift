@@ -68,6 +68,7 @@ final class ProfileViewController: UIViewController {
     }()
     
     private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
     
     private var profileImageServiceObserver: NSObjectProtocol?
     
@@ -105,7 +106,7 @@ final class ProfileViewController: UIViewController {
     
     private func updateAvatar() {
         guard
-            let profileImageURL = ProfileImageService.shared.avatarURL,
+            let profileImageURL = profileImageService.avatarURL,
             let url = URL(string: profileImageURL)
         else { return }
         let processor = RoundCornerImageProcessor(cornerRadius: 35)

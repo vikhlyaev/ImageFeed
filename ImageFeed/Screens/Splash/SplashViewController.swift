@@ -1,5 +1,4 @@
 import UIKit
-import ProgressHUD
 
 final class SplashViewController: UIViewController {
     
@@ -15,6 +14,7 @@ final class SplashViewController: UIViewController {
     private let oauthService = OAuthService()
     private let oauthTokenStorage = OAuthTokenStorage()
     private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -69,7 +69,7 @@ final class SplashViewController: UIViewController {
             switch result {
             case .success(let profile):
                 UIBlockingProgressHUB.dismiss()
-                ProfileImageService.shared.fetchProfileImageURL(username: profile.username) { _ in }
+                self.profileImageService.fetchProfileImageURL(username: profile.username) { _ in }
                 self.switchToTabBarController()
             case .failure:
                 UIBlockingProgressHUB.dismiss()
