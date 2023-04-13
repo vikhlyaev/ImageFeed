@@ -5,8 +5,7 @@ final class OAuthService {
     private var task: URLSessionTask?
     
     private func prepareRequest(code: String) -> URLRequest? {
-        guard let url = Constants.tokenURLString,
-              var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true)
+        guard var urlComponents = URLComponents(string: Constants.tokenURLString)
         else { return nil }
         urlComponents.queryItems = [
             URLQueryItem(name: "client_id", value: Constants.accessKey),

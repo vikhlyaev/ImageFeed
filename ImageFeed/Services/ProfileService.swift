@@ -9,7 +9,7 @@ final class ProfileService {
     
     private func prepareRequest() -> URLRequest? {
         guard let token = OAuthTokenStorage().token,
-              var url = Constants.baseURL
+              var url = URL(string: Constants.baseURLString)
         else { return nil }
         
         if #available(iOS 16.0, *) {

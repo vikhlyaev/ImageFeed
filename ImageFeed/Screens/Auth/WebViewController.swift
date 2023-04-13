@@ -35,8 +35,8 @@ final class WebViewController: UIViewController {
     }
     
     private func prepareRequest() -> URLRequest? {
-        guard let url = Constants.authorizeURLString,
-              var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true)
+        guard
+            var urlComponents = URLComponents(string: Constants.authorizeURLString)
         else { return nil }
         urlComponents.queryItems = [
             URLQueryItem(name: "client_id", value: Constants.accessKey),
@@ -45,6 +45,7 @@ final class WebViewController: UIViewController {
             URLQueryItem(name: "scope", value: Constants.accessScope)
         ]
         guard let url = urlComponents.url else { return nil }
+        print(url)
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         return request
