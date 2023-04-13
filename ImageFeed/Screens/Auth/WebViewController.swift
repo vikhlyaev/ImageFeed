@@ -45,10 +45,7 @@ final class WebViewController: UIViewController {
             URLQueryItem(name: "scope", value: Constants.accessScope)
         ]
         guard let url = urlComponents.url else { return nil }
-        print(url)
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        return request
+        return URLRequest(url: url)
     }
     
     private func loadAuthorization() {
