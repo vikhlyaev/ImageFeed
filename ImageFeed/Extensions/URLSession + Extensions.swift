@@ -9,6 +9,8 @@ extension URLSession {
                     decoder.keyDecodingStrategy = .convertFromSnakeCase
                     if let object = try? decoder.decode(T.self, from: data) {
                         completion(.success(object))
+                    } else {
+                        completion(.failure(NetworkError.parsingJsonError))
                     }
                 } else {
                     completion(.failure(NetworkError.httpStatusCode(statusCode)))
