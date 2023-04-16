@@ -39,8 +39,8 @@ final class ProfileService {
             switch result {
             case .success(let model):
                 let profile = Profile(username: model.username,
-                                      firstName: model.firstName,
-                                      lastName: model.lastName,
+                                      firstName: model.firstName ?? "",
+                                      lastName: model.lastName ?? "",
                                       bio: model.bio ?? "")
                 сompletionOnMainQueue(.success(profile))
                 self?.profile = profile
