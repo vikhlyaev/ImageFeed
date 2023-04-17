@@ -7,10 +7,11 @@ extension URLSession {
                 if 200 ..< 300 ~= statusCode {
                     let decoder = JSONDecoder()
                     decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    if let object = try? decoder.decode(T.self, from: data) {
+                    do {
+                        let object = try decoder.decode(T.self, from: data)
                         completion(.success(object))
-                    } else {
-                        completion(.failure(NetworkError.parsingJsonError))
+                    } catch {
+                        completion(.failure(NetworkError.parsingJsonError(error)))
                     }
                 } else {
                     completion(.failure(NetworkError.httpStatusCode(statusCode)))
