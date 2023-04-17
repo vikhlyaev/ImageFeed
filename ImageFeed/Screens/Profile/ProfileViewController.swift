@@ -1,10 +1,11 @@
 import UIKit
+import Kingfisher
+
 
 final class ProfileViewController: UIViewController {
     
     private lazy var photoImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "ProfilePhoto")
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -30,7 +31,6 @@ final class ProfileViewController: UIViewController {
     
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
-        label.text = "Екатерина Новикова"
         label.font = .systemFont(ofSize: 23, weight: .bold)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -39,7 +39,6 @@ final class ProfileViewController: UIViewController {
     
     private lazy var usernameLabel: UILabel = {
         let label = UILabel()
-        label.text = "@ekaterina_nov"
         label.font = .systemFont(ofSize: 13)
         label.textColor = UIColor(named: "customGrey")
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -48,7 +47,6 @@ final class ProfileViewController: UIViewController {
     
     private lazy var infoLabel: UILabel = {
         let label = UILabel()
-        label.text = "Hello, world!"
         label.numberOfLines = 0
         label.font = .systemFont(ofSize: 13)
         label.textColor = .white
@@ -69,15 +67,50 @@ final class ProfileViewController: UIViewController {
         return stackView
     }()
     
+    private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
+    
+    private var profileImageServiceObserver: NSObjectProtocol?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
         setConstraints()
+        addProfileAvatarObserver()
+        updateUI(from: profileService.profile)
+        updateAvatar()
     }
     
     private func setupView() {
         view.backgroundColor = UIColor(named: "customBlack")
         view.addSubview(contentStackView)
+    }
+    
+    private func updateUI(from profile: Profile?) {
+        guard let profile else { return }
+        nameLabel.text = profile.name
+        usernameLabel.text = profile.loginName
+        infoLabel.text = profile.bio
+    }
+    
+    private func addProfileAvatarObserver() {
+        profileImageServiceObserver = NotificationCenter.default
+            .addObserver(
+                forName: ProfileImageService.DidChangeNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                self?.updateAvatar()
+            }
+    }
+    
+    private func updateAvatar() {
+        guard
+            let profileImageURL = profileImageService.avatarURL,
+            let url = URL(string: profileImageURL)
+        else { return }
+        let processor = RoundCornerImageProcessor(cornerRadius: 35)
+        photoImageView.kf.setImage(with: url, options: [.processor(processor)])
     }
     
     @objc
@@ -91,13 +124,16 @@ final class ProfileViewController: UIViewController {
 extension ProfileViewController {
     private func setConstraints() {
         NSLayoutConstraint.activate([
+            photoImageView.heightAnchor.constraint(equalToConstant: 70),
+            photoImageView.widthAnchor.constraint(equalToConstant: 70),
+            
+            logOutButton.widthAnchor.constraint(equalToConstant: 44),
+            logOutButton.heightAnchor.constraint(equalToConstant: 44),
+            
             photoAndLogOutButtonStackView.topAnchor.constraint(equalTo: contentStackView.topAnchor),
             photoAndLogOutButtonStackView.leadingAnchor.constraint(equalTo: contentStackView.leadingAnchor),
             photoAndLogOutButtonStackView.trailingAnchor.constraint(equalTo: contentStackView.trailingAnchor),
 
-            logOutButton.widthAnchor.constraint(equalToConstant: 44),
-            logOutButton.heightAnchor.constraint(equalToConstant: 44),
-            
             contentStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
             contentStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             contentStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16)
