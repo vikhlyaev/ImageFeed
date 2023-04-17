@@ -34,7 +34,7 @@ final class ProfileService {
                 completion(result)
             }
         }
-        
+    
         let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<ProfileResult, Error>) in
             switch result {
             case .success(let model):
@@ -42,14 +42,13 @@ final class ProfileService {
                                       firstName: model.firstName,
                                       lastName: model.lastName ?? "",
                                       bio: model.bio ?? "")
-                сompletionOnMainQueue(.success(profile))
                 self?.profile = profile
                 self?.task = nil
+                сompletionOnMainQueue(.success(profile))
             case .failure(let error):
                 сompletionOnMainQueue(.failure(error))
             }
         }
-        
         self.task = task
         task.resume()
     }
