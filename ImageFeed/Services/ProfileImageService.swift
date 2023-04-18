@@ -41,15 +41,14 @@ final class ProfileImageService {
             guard let self else { return }
             switch result {
             case .success(let model):
-                сompletionOnMainQueue(.success(model.profileImage.medium))
                 self.avatarURL = model.profileImage.medium
                 self.task = nil
-                let avatarURL = model.profileImage.medium
                 NotificationCenter.default
                     .post(
                         name: ProfileImageService.DidChangeNotification,
                         object: self,
-                        userInfo: ["URL": avatarURL])
+                        userInfo: ["URL": model.profileImage.medium])
+                сompletionOnMainQueue(.success(model.profileImage.medium))
             case .failure(let error):
                 сompletionOnMainQueue(.failure(error))
             }
