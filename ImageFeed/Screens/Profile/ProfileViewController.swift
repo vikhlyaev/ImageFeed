@@ -115,7 +115,13 @@ final class ProfileViewController: UIViewController {
     
     @objc
     private func logOutTapped() {
-        print("logOutTapped")
+        WebViewController.clean()
+        OAuthTokenStorage.clean()
+        ImagesListService.shared.clean()
+        ProfileImageService.shared.clean()
+        ProfileService.shared.clean()
+        guard let window = UIApplication.shared.windows.first else { fatalError("Invalid Configuration") }
+        window.rootViewController = SplashViewController()
     }
 }
 
