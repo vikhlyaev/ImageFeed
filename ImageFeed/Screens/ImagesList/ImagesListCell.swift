@@ -28,6 +28,8 @@ final class ImagesListCell: UITableViewCell {
         return label
     }()
     
+    weak var delegate: ImagesListCellDelegate?
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupView()
@@ -54,7 +56,12 @@ final class ImagesListCell: UITableViewCell {
     
     @objc
     private func likeButtonTapped() {
-        print("likeButtonTapped")
+        delegate?.imageListCellDidTapLike(self)
+    }
+    
+    func setIsLiked(_ isLiked: Bool) {
+        let likeImage = isLiked ? UIImage(named: "LikeButtonActive") : UIImage(named: "LikeButton")
+        likeButton.setImage(likeImage, for: .normal)
     }
 }
 
