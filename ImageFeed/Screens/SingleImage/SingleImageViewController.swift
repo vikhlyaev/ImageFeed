@@ -70,13 +70,13 @@ final class SingleImageViewController: UIViewController {
         else { return }
         UIBlockingProgressHUB.show()
         imageView.kf.setImage(with: imageUrl) { [weak self] result in
+            UIBlockingProgressHUB.dismiss()
             switch result {
             case .success(let imageView):
                 self?.rescaleAndCenterImageInScrollView(image: imageView.image)
             case .failure(let error):
                 fatalError(error.localizedDescription)
             }
-            UIBlockingProgressHUB.dismiss()
         }
     }
     

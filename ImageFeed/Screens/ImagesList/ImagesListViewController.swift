@@ -89,6 +89,7 @@ extension ImagesListViewController: UITableViewDataSource {
             let thumbUrl = URL(string: photos[indexPath.row].thumbImageURL)
         else { return UITableViewCell() }
         let date = dateFormatter.string(from: photos[indexPath.row].createdAt ?? Date())
+        
         cell.cellImageView.kf.setImage(with: thumbUrl, placeholder: UIImage(named: "Placeholder")) { [weak self] _ in
             self?.tableView.reloadRows(at: [indexPath], with: .automatic)
         }
