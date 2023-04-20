@@ -1,27 +1,17 @@
 import UIKit
+import Kingfisher
 
 final class ImagesListViewController: UIViewController {
     
-    @IBOutlet private var tableView: UITableView!
-    private let photosName: [String] = Array(0..<20).map{ "\($0)" }
-    private let segueIdentifier = "showSingleImage"
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView(frame: .zero)
+        tableView.backgroundColor = .customBlack
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == segueIdentifier {
-            guard let viewController = segue.destination as? SingleImageViewController,
-                  let indexPath = sender as? IndexPath,
-                  let image = UIImage(named: photosName[indexPath.row])
-            else { return }
-            viewController.image = image
-        } else {
-            super.prepare(for: segue, sender: sender)
-        }
-    }
+        tableView.separatorStyle = .none
+        tableView.register(ImagesListCell.self, forCellReuseIdentifier: ImagesListCell.identifier)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        return tableView
+    }()
     
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -30,13 +20,58 @@ final class ImagesListViewController: UIViewController {
         return formatter
     }()
     
-    private func prepareCell(for indexPath: IndexPath) -> ImagesListCellViewModel? {
-        guard let image = UIImage(named: "\(indexPath.row)"),
-              let likeButtonImage = indexPath.row % 2 == 0 ? UIImage(named: "LikeButton") : UIImage(named: "LikeButtonActive")
-        else { return nil }
-        return ImagesListCellViewModel(image: image,
-                                       date: dateFormatter.string(from: Date()),
-                                       likeButtonImage: likeButtonImage)
+    private let imagesListService = ImagesListService.shared
+    private var imagesListServiceObserver: NSObjectProtocol?
+    private var photos: [Photo] = []
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+        setupNavigationBar()
+        setConstraints()
+        setDelegates()
+        addImagesListServiceObserver()
+        imagesListService.fetchPhotosNextPage()
+    }
+    
+    private func setupView() {
+        view.addSubview(tableView)
+    }
+    
+    private func setupNavigationBar() {
+        let navBarAppearance = UINavigationBarAppearance()
+        navBarAppearance.configureWithOpaqueBackground()
+        navBarAppearance.backgroundColor = .customBlack
+        navigationController?.navigationBar.standardAppearance = navBarAppearance
+        
+        navigationController?.navigationBar.backgroundColor = .customBlack
+    }
+    
+    private func setDelegates() {
+        tableView.delegate = self
+        tableView.dataSource = self
+    }
+    
+    private func addImagesListServiceObserver() {
+        imagesListServiceObserver = NotificationCenter.default
+            .addObserver(forName: ImagesListService.DidChangeNotification,
+                         object: nil,
+                         queue: .main,
+                         using: { [weak self] _ in
+                self?.updateTableViewAnimated()
+            })
+    }
+    
+    private func updateTableViewAnimated() {
+        let oldCount = photos.count
+        let newCount = imagesListService.photos.count
+        photos = imagesListService.photos
+        if oldCount != newCount {
+            tableView.performBatchUpdates {
+                let indexPaths = (oldCount..<newCount).map { IndexPath(row: $0, section: 0) }
+                tableView.insertRows(at: indexPaths, with: .automatic)
+            }
+        }
     }
 }
 
@@ -44,15 +79,22 @@ final class ImagesListViewController: UIViewController {
 
 extension ImagesListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        photosName.count
+        photos.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard
             let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.identifier, for: indexPath) as? ImagesListCell,
-            let viewModel = prepareCell(for: indexPath)
+            let likeButtonImage = photos[indexPath.row].isLiked ? UIImage(named: "LikeButton") : UIImage(named: "LikeButtonActive"),
+            let thumbUrl = URL(string: photos[indexPath.row].thumbImageURL)
         else { return UITableViewCell() }
-        cell.configure(with: viewModel)
+        let date = dateFormatter.string(from: photos[indexPath.row].createdAt ?? Date())
+        cell.cellImageView.kf.setImage(with: thumbUrl, placeholder: UIImage(named: "Placeholder")) { [weak self] _ in
+            self?.tableView.reloadRows(at: [indexPath], with: .automatic)
+        }
+        cell.cellImageView.kf.indicatorType = .activity
+        cell.dateLabel.text = date
+        cell.likeButton.setImage(likeButtonImage, for: .normal)
         return cell
     }
 }
@@ -61,23 +103,35 @@ extension ImagesListViewController: UITableViewDataSource {
 
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: segueIdentifier, sender: indexPath)
+        print("HOHO")
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        guard let image = UIImage(named: photosName[indexPath.row]) else { return 0 }
         let imageInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
         let imageViewWidth = tableView.bounds.width - imageInsets.left - imageInsets.right
-        let imageWidth = image.size.width
+        let imageWidth = photos[indexPath.row].size.width
         let scale = imageViewWidth / imageWidth
-        let cellHeight = image.size.height * scale + imageInsets.top + imageInsets.bottom
+        let cellHeight = photos[indexPath.row].size.height * scale + imageInsets.top + imageInsets.bottom
         return cellHeight
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//        if indexPath.row + 1 == photos.count {
-//            fetchPhotosNextPage()
-//        }
+        if indexPath.row + 1 == photos.count {
+            imagesListService.fetchPhotosNextPage()
+        }
+    }
+}
+
+// MARK: - Setting Constraints
+
+extension ImagesListViewController {
+    private func setConstraints() {
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
     }
 }
 
