@@ -83,24 +83,25 @@ extension ImagesListViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let photo = photos[indexPath.row]
-        
         guard
-            let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.identifier, for: indexPath) as? ImagesListCell,
-            let thumbUrl = URL(string: photo.thumbImageURL)
+            let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.identifier, for: indexPath) as? ImagesListCell
         else { return UITableViewCell() }
         
-        cell.cellImageView.kf.setImage(with: thumbUrl, placeholder: UIImage(named: "Placeholder")) { [weak self] _ in
-            self?.tableView.reloadRows(at: [indexPath], with: .automatic)
+        let photo = photos[indexPath.row]
+        
+        if let thumbUrl = URL(string: photo.thumbImageURL) {
+            cell.cellImageView.kf.indicatorType = .activity
+            cell.cellImageView.kf.setImage(with: thumbUrl, placeholder: UIImage(named: "Placeholder")) { [weak self] _ in
+                self?.tableView.reloadRows(at: [indexPath], with: .automatic)
+                cell.cellImageView.kf.indicatorType = .none
+            }
+            let date = dateFormatter.string(from: photo.createdAt ?? Date())
+            cell.dateLabel.text = date
+            cell.setIsLiked(photo.isLiked)
+            cell.delegate = self
+            return cell
         }
-        
-        let date = dateFormatter.string(from: photo.createdAt ?? Date())
-        
-        cell.cellImageView.kf.indicatorType = .activity
-        cell.dateLabel.text = date
-        cell.setIsLiked(photo.isLiked)
-        cell.delegate = self
-        return cell
+        return UITableViewCell()
     }
 }
 
@@ -110,13 +111,15 @@ extension ImagesListViewController: ImagesListCellDelegate {
     func imageListCellDidTapLike(_ cell: ImagesListCell) {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
         let photo = photos[indexPath.row]
+        UIBlockingProgressHUB.show()
         imagesListService.changeLike(photoId: photo.id, isLike: photo.isLiked) { result in
             switch result {
             case .success():
-                DispatchQueue.main.async {
-                    cell.setIsLiked(photo.isLiked)
-                }
+                self.photos = self.imagesListService.photos
+                cell.setIsLiked(!photo.isLiked)
+                UIBlockingProgressHUB.dismiss()
             case .failure(let error):
+                UIBlockingProgressHUB.dismiss()
                 fatalError(error.localizedDescription)
             }
         }
