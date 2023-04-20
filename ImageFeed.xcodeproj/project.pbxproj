@@ -38,6 +38,7 @@
 		0ADB6DFB29EED5FD00EBE31F /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADB6DFA29EED5FD00EBE31F /* Photo.swift */; };
 		0ADB6DFD29EEDD1300EBE31F /* PhotoResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADB6DFC29EEDD1300EBE31F /* PhotoResult.swift */; };
 		0ADB6E0D29F02DF400EBE31F /* UIColor + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADB6E0C29F02DF400EBE31F /* UIColor + Extensions.swift */; };
+		0ADB6E1329F12C1300EBE31F /* Array + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADB6E1229F12C1300EBE31F /* Array + Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -71,6 +72,7 @@
 		0ADB6DFA29EED5FD00EBE31F /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		0ADB6DFC29EEDD1300EBE31F /* PhotoResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoResult.swift; sourceTree = "<group>"; };
 		0ADB6E0C29F02DF400EBE31F /* UIColor + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor + Extensions.swift"; sourceTree = "<group>"; };
+		0ADB6E1229F12C1300EBE31F /* Array + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array + Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -219,6 +221,7 @@
 			children = (
 				0A41D38529E554DC00FE0A0F /* URLSession + Extensions.swift */,
 				0ADB6E0C29F02DF400EBE31F /* UIColor + Extensions.swift */,
+				0ADB6E1229F12C1300EBE31F /* Array + Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -333,6 +336,7 @@
 				0A25FD5029ABDE230098A11C /* ImagesListCell.swift in Sources */,
 				0A714C1629DD98AE007D76C5 /* OAuthService.swift in Sources */,
 				0A41D38629E554DC00FE0A0F /* URLSession + Extensions.swift in Sources */,
+				0ADB6E1329F12C1300EBE31F /* Array + Extensions.swift in Sources */,
 				0A714C2529DE6E8B007D76C5 /* OAuthTokenResponseBody.swift in Sources */,
 				0A714C2329DDDF82007D76C5 /* SplashViewController.swift in Sources */,
 				0ADB6DFD29EEDD1300EBE31F /* PhotoResult.swift in Sources */,
