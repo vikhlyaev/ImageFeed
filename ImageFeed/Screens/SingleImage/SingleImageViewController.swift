@@ -74,8 +74,10 @@ final class SingleImageViewController: UIViewController {
             switch result {
             case .success(let imageView):
                 self?.rescaleAndCenterImageInScrollView(image: imageView.image)
-            case .failure(let error):
-                fatalError(error.localizedDescription)
+            case .failure(_):
+                DispatchQueue.main.async { [weak self] in
+                    self?.showErrorAlert()
+                }
             }
         }
     }
@@ -95,6 +97,19 @@ final class SingleImageViewController: UIViewController {
         let x = (newContentSize.width - visibleRectSize.width) / 2
         let y = (newContentSize.height - visibleRectSize.height) / 2
         scrollView.setContentOffset(CGPoint(x: x, y: y), animated: false)
+    }
+    
+    private func showErrorAlert() {
+        let alert = UIAlertController(title: "Что-то пошло не так(",
+                                      message: "Попробовать еще раз?",
+                                      preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "Не надо", style: .cancel)
+        let okAction = UIAlertAction(title: "Повторить", style: .default) { [weak self] _ in
+            self?.setImage()
+        }
+        alert.addAction(cancelAction)
+        alert.addAction(okAction)
+        present(alert, animated: true)
     }
     
     @objc
