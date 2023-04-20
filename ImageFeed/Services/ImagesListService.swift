@@ -1,11 +1,14 @@
 import Foundation
 
 final class ImagesListService {
+    static let shared = ImagesListService()
     private var task: URLSessionTask?
     private(set) var photos: [Photo] = []
     private var lastLoadedPage: Int?
     
     static let DidChangeNotification = Notification.Name("ImagesListServiceDidChange")
+    
+    private init() {}
     
     private func prepareRequest(with page: Int) -> URLRequest? {
         guard
@@ -24,21 +27,15 @@ final class ImagesListService {
         return request
     }
     
-    func fetchPhotosNextPage(_ completion: @escaping (Result<[Photo], Error>) -> Void) {
+    func fetchPhotosNextPage() {
         assert(Thread.isMainThread)
-        let nextPage = lastLoadedPage != nil ? lastLoadedPage ?? 0 + 1 : 1
+        let nextPage = lastLoadedPage == nil ? 1 : (lastLoadedPage ?? 0) + 1
         guard let request = prepareRequest(with: nextPage) else { return }
-
-        let сompletionOnMainQueue: (Result<[Photo], Error>) -> Void = { result in
-            DispatchQueue.main.async {
-                completion(result)
-            }
-        }
-        
         let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<[PhotoResult], Error>) in
             guard let self else { return }
             switch result {
             case .success(let photoResults):
+                print(photoResults[0].likedByUser)
                 let newPhotos = photoResults.map { Photo(from: $0) }
                 self.photos.append(contentsOf: newPhotos)
                 self.task = nil
@@ -48,9 +45,8 @@ final class ImagesListService {
                         name: ImagesListService.DidChangeNotification,
                         object: self,
                         userInfo: ["photos": self.photos])
-                сompletionOnMainQueue(.success(newPhotos))
             case .failure(let error):
-                сompletionOnMainQueue(.failure(error))
+                fatalError(error.localizedDescription)
             }
         }
         
