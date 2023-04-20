@@ -1,15 +1,21 @@
 import UIKit
+import Kingfisher
 
 final class SingleImageViewController: UIViewController {
     
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
+        scrollView.bounces = false
+        scrollView.minimumZoomScale = 0.1
+        scrollView.maximumZoomScale = 1.25
+        scrollView.contentInsetAdjustmentBehavior = .never
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         return scrollView
     }()
     
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -32,43 +38,46 @@ final class SingleImageViewController: UIViewController {
         return button
     }()
     
-    var image: UIImage? {
+    var imageUrl: String? {
         didSet {
-            guard isViewLoaded else { return }
-            updateUI()
+            setImage()
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupView()
         setConstraints()
-        updateUI()
-        setZoomScales()
-        setupScrollView()
+        setDelegates()
     }
     
     private func setupView() {
+        view.backgroundColor = .customBlack
         view.addSubview(scrollView)
         scrollView.addSubview(imageView)
         view.addSubview(backButton)
         view.addSubview(shareButton)
     }
     
-    private func updateUI() {
-        imageView.image = image
-        guard let image = image else { return }
-        rescaleAndCenterImageInScrollView(image: image)
+    private func setDelegates() {
+        scrollView.delegate = self
     }
     
-    private func setupScrollView() {
-        scrollView.contentInsetAdjustmentBehavior = .never
-    }
-    
-    private func setZoomScales() {
-        scrollView.minimumZoomScale = 0.1
-        scrollView.maximumZoomScale = 1.25
+    private func setImage() {
+        guard
+            let imageUrlString = imageUrl,
+            let imageUrl = URL(string: imageUrlString)
+        else { return }
+        UIBlockingProgressHUB.show()
+        imageView.kf.setImage(with: imageUrl) { [weak self] result in
+            switch result {
+            case .success(let imageView):
+                self?.rescaleAndCenterImageInScrollView(image: imageView.image)
+            case .failure(let error):
+                fatalError(error.localizedDescription)
+            }
+            UIBlockingProgressHUB.dismiss()
+        }
     }
     
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
@@ -89,13 +98,13 @@ final class SingleImageViewController: UIViewController {
     }
     
     @objc
-    func backButtonTapped() {
+    private func backButtonTapped() {
         dismiss(animated: true)
     }
     
     @objc
-    func shareButtonTapped() {
-        guard let image = image else { return }
+    private func shareButtonTapped() {
+        guard let image = imageView.image else { return }
         let activityViewController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
         present(activityViewController, animated: true)
     }
@@ -118,6 +127,11 @@ extension SingleImageViewController {
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            imageView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            imageView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            imageView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            imageView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             
             backButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 56),
             backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
