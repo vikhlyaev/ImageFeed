@@ -68,12 +68,19 @@ final class ImagesListService {
     
     func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
         assert(Thread.isMainThread)
+        
+        let сompletionOnMainQueue: (Result<Void, Error>) -> Void = { result in
+            DispatchQueue.main.async {
+                completion(result)
+            }
+        }
+        
         guard let request = prepareRequest(with: photoId, and: isLike) else { return }
         let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<UnsplashResult, Error>) in
             guard let self else { return }
             switch result {
-            case .success(let unsplashResult):
-                if let index = self.photos.firstIndex(where: { $0.id == unsplashResult.photo.id }) {
+            case .success(_):
+                if let index = self.photos.firstIndex(where: { $0.id == photoId }) {
                     let photo = self.photos[index]
                     let newPhoto = Photo(
                         id: photo.id,
@@ -82,13 +89,12 @@ final class ImagesListService {
                         welcomeDescription: photo.welcomeDescription,
                         thumbImageURL: photo.thumbImageURL,
                         largeImageURL: photo.largeImageURL,
-                        isLiked: unsplashResult.photo.likedByUser)
+                        isLiked: !photo.isLiked)
                     self.photos = self.photos.withReplaced(itemAt: index, newValue: newPhoto)
-                    completion(.success(Void()))
                 }
-                completion(.success(()))
+                сompletionOnMainQueue(.success(()))
             case .failure(let error):
-                completion(.failure(error))
+                сompletionOnMainQueue(.failure(error))
             }
         }
         self.task = task
