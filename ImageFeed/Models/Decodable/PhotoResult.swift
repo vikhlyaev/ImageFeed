@@ -29,3 +29,7 @@ struct UrlsResult: Decodable {
         case thumb = "thumb"
     }
 }
+
+struct UnsplashResult: Decodable {
+    let photo: PhotoResult
+}

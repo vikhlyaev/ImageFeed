@@ -48,7 +48,6 @@ final class ImagesListService {
             guard let self else { return }
             switch result {
             case .success(let photoResults):
-                print(photoResults[0].likedByUser)
                 let newPhotos = photoResults.map { Photo(from: $0) }
                 self.photos.append(contentsOf: newPhotos)
                 self.task = nil
@@ -70,12 +69,11 @@ final class ImagesListService {
     func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
         assert(Thread.isMainThread)
         guard let request = prepareRequest(with: photoId, and: isLike) else { return }
-        let session = URLSession.shared
-        let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<PhotoResult, Error>) in
+        let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<UnsplashResult, Error>) in
             guard let self else { return }
             switch result {
-            case .success(let photoResult):
-                if let index = self.photos.firstIndex(where: { $0.id == photoResult.id }) {
+            case .success(let unsplashResult):
+                if let index = self.photos.firstIndex(where: { $0.id == unsplashResult.photo.id }) {
                     let photo = self.photos[index]
                     let newPhoto = Photo(
                         id: photo.id,
@@ -84,8 +82,9 @@ final class ImagesListService {
                         welcomeDescription: photo.welcomeDescription,
                         thumbImageURL: photo.thumbImageURL,
                         largeImageURL: photo.largeImageURL,
-                        isLiked: photoResult.likedByUser)
+                        isLiked: unsplashResult.photo.likedByUser)
                     self.photos = self.photos.withReplaced(itemAt: index, newValue: newPhoto)
+                    completion(.success(Void()))
                 }
                 completion(.success(()))
             case .failure(let error):
@@ -94,5 +93,11 @@ final class ImagesListService {
         }
         self.task = task
         task.resume()
+    }
+    
+    func clean() {
+        task = nil
+        photos = []
+        lastLoadedPage = nil
     }
 }
