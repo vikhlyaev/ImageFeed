@@ -39,6 +39,7 @@
 		0ADB6DFD29EEDD1300EBE31F /* PhotoResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADB6DFC29EEDD1300EBE31F /* PhotoResult.swift */; };
 		0ADB6E0D29F02DF400EBE31F /* UIColor + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADB6E0C29F02DF400EBE31F /* UIColor + Extensions.swift */; };
 		0ADB6E1329F12C1300EBE31F /* Array + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADB6E1229F12C1300EBE31F /* Array + Extensions.swift */; };
+		0ADB6E1529F1324600EBE31F /* ImagesListCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADB6E1429F1324600EBE31F /* ImagesListCellDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -73,6 +74,7 @@
 		0ADB6DFC29EEDD1300EBE31F /* PhotoResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoResult.swift; sourceTree = "<group>"; };
 		0ADB6E0C29F02DF400EBE31F /* UIColor + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor + Extensions.swift"; sourceTree = "<group>"; };
 		0ADB6E1229F12C1300EBE31F /* Array + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array + Extensions.swift"; sourceTree = "<group>"; };
+		0ADB6E1429F1324600EBE31F /* ImagesListCellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCellDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -164,6 +166,7 @@
 			children = (
 				0A25FD4D29ABDE230098A11C /* ImagesListViewController.swift */,
 				0A25FD4E29ABDE230098A11C /* ImagesListCell.swift */,
+				0ADB6E1429F1324600EBE31F /* ImagesListCellDelegate.swift */,
 			);
 			path = ImagesList;
 			sourceTree = "<group>";
@@ -329,6 +332,7 @@
 			files = (
 				0ADB6DFB29EED5FD00EBE31F /* Photo.swift in Sources */,
 				0A5AF00529E2FEC9006DD5D7 /* Profile.swift in Sources */,
+				0ADB6E1529F1324600EBE31F /* ImagesListCellDelegate.swift in Sources */,
 				0ADB6DF929EED58E00EBE31F /* ImagesListService.swift in Sources */,
 				0ADB6E0D29F02DF400EBE31F /* UIColor + Extensions.swift in Sources */,
 				0A25FD4F29ABDE230098A11C /* ImagesListViewController.swift in Sources */,
