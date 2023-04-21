@@ -6,6 +6,8 @@ final class ImagesListService {
     private(set) var photos: [Photo] = []
     private var lastLoadedPage: Int?
     
+    private lazy var dateFormatter = ISO8601DateFormatter()
+    
     static let DidChangeNotification = Notification.Name("ImagesListServiceDidChange")
     
     private init() {}
@@ -55,7 +57,12 @@ final class ImagesListService {
             guard let self else { return }
             switch result {
             case .success(let photoResults):
-                let newPhotos = photoResults.map { Photo(from: $0) }
+                let newPhotos = photoResults.map {
+                    let createdDate = self.dateFormatter.date(from: $0.createdAt)
+                    var newPhoto = Photo(from: $0)
+                    newPhoto.createdAt = createdDate
+                    return newPhoto
+                }
                 self.photos.append(contentsOf: newPhotos)
                 self.lastLoadedPage = nextPage
                 NotificationCenter.default

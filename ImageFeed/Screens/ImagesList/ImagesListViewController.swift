@@ -76,8 +76,7 @@ final class ImagesListViewController: UIViewController {
     
     private func fetchPhotos() {
         imagesListService.fetchPhotosNextPage { [weak self] error in
-            guard let error else { return }
-            self?.showErrorAlert()
+            if error != nil { self?.showErrorAlert() }
         }
     }
     
@@ -115,8 +114,7 @@ extension ImagesListViewController: UITableViewDataSource {
                 self?.tableView.reloadRows(at: [indexPath], with: .automatic)
                 cell.cellImageView.kf.indicatorType = .none
             }
-            let date = dateFormatter.string(from: photo.createdAt ?? Date())
-            cell.dateLabel.text = date
+            cell.dateLabel.text = photo.createdAt != nil ? dateFormatter.string(from: photo.createdAt!) : ""
             cell.setIsLiked(photo.isLiked)
             cell.delegate = self
             return cell
