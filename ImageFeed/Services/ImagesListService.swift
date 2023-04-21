@@ -45,6 +45,8 @@ final class ImagesListService {
     func fetchPhotosNextPage(_ completion: @escaping (Error?) -> Void) {
         assert(Thread.isMainThread)
         
+        guard task == nil else { return }
+        
         let сompletionOnMainQueue: (Error?) -> Void = { result in
             DispatchQueue.main.async {
                 completion(result)
