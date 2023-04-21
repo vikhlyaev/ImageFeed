@@ -31,7 +31,7 @@ final class ImagesListViewController: UIViewController {
         setConstraints()
         setDelegates()
         addImagesListServiceObserver()
-        imagesListService.fetchPhotosNextPage()
+        fetchPhotos()
     }
     
     private func setupView() {
@@ -72,6 +72,26 @@ final class ImagesListViewController: UIViewController {
                 tableView.insertRows(at: indexPaths, with: .automatic)
             }
         }
+    }
+    
+    private func fetchPhotos() {
+        imagesListService.fetchPhotosNextPage { [weak self] error in
+            guard let error else { return }
+            self?.showErrorAlert()
+        }
+    }
+    
+    private func showErrorAlert() {
+        let alert = UIAlertController(title: "Что-то пошло не так(",
+                                      message: "Попробовать еще раз?",
+                                      preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "Не надо", style: .cancel)
+        let okAction = UIAlertAction(title: "Повторить", style: .default) { [weak self] _ in
+            self?.fetchPhotos()
+        }
+        alert.addAction(cancelAction)
+        alert.addAction(okAction)
+        present(alert, animated: true)
     }
 }
 
@@ -147,7 +167,7 @@ extension ImagesListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row + 1 == photos.count {
-            imagesListService.fetchPhotosNextPage()
+            fetchPhotos()
         }
     }
 }

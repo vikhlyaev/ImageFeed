@@ -40,8 +40,15 @@ final class ImagesListService {
         return request
     }
     
-    func fetchPhotosNextPage() {
+    func fetchPhotosNextPage(_ completion: @escaping (Error?) -> Void) {
         assert(Thread.isMainThread)
+        
+        let сompletionOnMainQueue: (Error?) -> Void = { result in
+            DispatchQueue.main.async {
+                completion(result)
+            }
+        }
+        
         let nextPage = lastLoadedPage == nil ? 1 : lastLoadedPage! + 1
         guard let request = prepareRequest(with: nextPage) else { return }
         let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<[PhotoResult], Error>) in
@@ -56,12 +63,13 @@ final class ImagesListService {
                         name: ImagesListService.DidChangeNotification,
                         object: self,
                         userInfo: ["photos": self.photos])
+                сompletionOnMainQueue(nil)
             case .failure(let error):
-                fatalError(error.localizedDescription)
+                print(error)
+                сompletionOnMainQueue(error)
             }
             self.task = nil
         }
-        
         self.task = task
         task.resume()
     }
