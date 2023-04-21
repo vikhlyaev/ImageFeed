@@ -113,15 +113,26 @@ final class ProfileViewController: UIViewController {
         photoImageView.kf.setImage(with: url, options: [.processor(processor)])
     }
     
+    private func showLogOutAlert() {
+        let alert = UIAlertController(title: "Пока, пока!", message: "Уверены что хотите выйти?", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Да", style: .default) { _ in
+            WebViewController.clean()
+            OAuthTokenStorage.clean()
+            ImagesListService.shared.clean()
+            ProfileImageService.shared.clean()
+            ProfileService.shared.clean()
+            guard let window = UIApplication.shared.windows.first else { fatalError("Invalid Configuration") }
+            window.rootViewController = SplashViewController()
+        }
+        let noAction = UIAlertAction(title: "Нет", style: .cancel)
+        alert.addAction(okAction)
+        alert.addAction(noAction)
+        present(alert, animated: true)
+    }
+    
     @objc
     private func logOutTapped() {
-        WebViewController.clean()
-        OAuthTokenStorage.clean()
-        ImagesListService.shared.clean()
-        ProfileImageService.shared.clean()
-        ProfileService.shared.clean()
-        guard let window = UIApplication.shared.windows.first else { fatalError("Invalid Configuration") }
-        window.rootViewController = SplashViewController()
+        showLogOutAlert()
     }
 }
 
