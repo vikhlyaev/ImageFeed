@@ -51,6 +51,8 @@ final class ImagesListService {
             }
         }
         
+        guard task == nil else { return }
+
         let nextPage = lastLoadedPage == nil ? 1 : lastLoadedPage! + 1
         guard let request = prepareRequest(with: nextPage) else { return }
         let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<[PhotoResult], Error>) in
