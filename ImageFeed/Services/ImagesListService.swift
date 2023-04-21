@@ -42,7 +42,7 @@ final class ImagesListService {
     
     func fetchPhotosNextPage() {
         assert(Thread.isMainThread)
-        let nextPage = lastLoadedPage == nil ? 1 : (lastLoadedPage ?? 0) + 1
+        let nextPage = lastLoadedPage == nil ? 1 : lastLoadedPage! + 1
         guard let request = prepareRequest(with: nextPage) else { return }
         let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<[PhotoResult], Error>) in
             guard let self else { return }
@@ -50,7 +50,6 @@ final class ImagesListService {
             case .success(let photoResults):
                 let newPhotos = photoResults.map { Photo(from: $0) }
                 self.photos.append(contentsOf: newPhotos)
-                self.task = nil
                 self.lastLoadedPage = nextPage
                 NotificationCenter.default
                     .post(
@@ -60,6 +59,7 @@ final class ImagesListService {
             case .failure(let error):
                 fatalError(error.localizedDescription)
             }
+            self.task = nil
         }
         
         self.task = task
@@ -96,6 +96,7 @@ final class ImagesListService {
             case .failure(let error):
                 сompletionOnMainQueue(.failure(error))
             }
+            self.task = nil
         }
         self.task = task
         task.resume()

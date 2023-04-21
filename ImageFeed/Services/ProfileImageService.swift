@@ -42,7 +42,6 @@ final class ProfileImageService {
             switch result {
             case .success(let model):
                 self.avatarURL = model.profileImage.medium
-                self.task = nil
                 NotificationCenter.default
                     .post(
                         name: ProfileImageService.DidChangeNotification,
@@ -52,8 +51,8 @@ final class ProfileImageService {
             case .failure(let error):
                 сompletionOnMainQueue(.failure(error))
             }
+            self.task = nil
         }
-        
         self.task = task
         task.resume()
     }

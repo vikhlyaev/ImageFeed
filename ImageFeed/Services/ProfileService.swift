@@ -43,11 +43,11 @@ final class ProfileService {
                                       lastName: model.lastName ?? "",
                                       bio: model.bio ?? "")
                 self?.profile = profile
-                self?.task = nil
                 сompletionOnMainQueue(.success(profile))
             case .failure(let error):
                 сompletionOnMainQueue(.failure(error))
             }
+            self?.task = nil
         }
         self.task = task
         task.resume()

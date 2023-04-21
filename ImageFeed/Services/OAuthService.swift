@@ -43,11 +43,11 @@ final class OAuthService {
             case .success(let model):
                 let token = model.accessToken
                 сompletionOnMainQueue(.success(token))
-                self?.task = nil
             case .failure(let error):
                 сompletionOnMainQueue(.failure(error))
                 self?.lastCode = nil
             }
+            self?.task = nil
         }
         self.task = task
         task.resume()
