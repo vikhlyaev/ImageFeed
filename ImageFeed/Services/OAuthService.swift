@@ -28,7 +28,6 @@ final class OAuthService {
     
     func fetchAuthToken(_ code: String, completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
-        
         guard let request = prepareRequest(code: code) else { return }
         
         let сompletionOnMainQueue: (Result<String, Error>) -> Void = { result in
@@ -44,13 +43,12 @@ final class OAuthService {
             case .success(let model):
                 let token = model.accessToken
                 сompletionOnMainQueue(.success(token))
-                self?.task = nil
             case .failure(let error):
                 сompletionOnMainQueue(.failure(error))
                 self?.lastCode = nil
             }
+            self?.task = nil
         }
-        
         self.task = task
         task.resume()
     }

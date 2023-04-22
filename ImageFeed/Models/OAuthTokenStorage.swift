@@ -14,5 +14,9 @@ final class OAuthTokenStorage {
             KeychainWrapper.standard.set(newValue, forKey: key)
         }
     }
+    
+    static func clean() {
+        KeychainWrapper.standard.removeAllKeys()
+    }
 }
 
