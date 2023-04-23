@@ -9,7 +9,7 @@ struct AuthConfiguration {
     let tokenURLString: String
     let baseURLString: String
     
-    static var standart: AuthConfiguration {
+    static var standard: AuthConfiguration {
         AuthConfiguration(
             accessKey: Secrets.accessKey,
             secretKey: Secrets.secretKey,

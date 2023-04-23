@@ -4,7 +4,7 @@ final class ModuleBuilder {
     
     static let shared = ModuleBuilder()
     
-    private let authHelper: AuthHelper = AuthHelperImpl(configuration: AuthConfiguration.standart)
+    private let authHelper: AuthHelper = AuthHelperImpl(configuration: AuthConfiguration.standard)
     
     private init() {}
     

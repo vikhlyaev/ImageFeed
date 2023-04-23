@@ -15,7 +15,7 @@ final class ImagesListService {
     private func prepareRequest(with page: Int) -> URLRequest? {
         guard
             let token = OAuthTokenStorage().token,
-            var urlComponents = URLComponents(string: AuthConfiguration.standart.baseURLString)
+            var urlComponents = URLComponents(string: AuthConfiguration.standard.baseURLString)
         else { return nil }
         urlComponents.path = "/photos"
         urlComponents.queryItems = [
@@ -32,7 +32,7 @@ final class ImagesListService {
     private func prepareRequest(with photoId: String, and isLike: Bool) -> URLRequest? {
         guard
             let token = OAuthTokenStorage().token,
-            var urlComponents = URLComponents(string: AuthConfiguration.standart.baseURLString)
+            var urlComponents = URLComponents(string: AuthConfiguration.standard.baseURLString)
         else { return nil }
         urlComponents.path = "/photos/\(photoId)/like"
         guard let url = urlComponents.url else { return nil }
