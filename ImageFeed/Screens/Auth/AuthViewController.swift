@@ -5,25 +5,52 @@ protocol AuthViewControllerDelegate: AnyObject {
 }
 
 final class AuthViewController: UIViewController {
-    private let segueIdentifier = "ShowWebView"
+    
+    private lazy var unsplashLogoImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "UnsplashLogo")
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    private lazy var loginButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.layer.cornerRadius = 16
+        button.layer.masksToBounds = true
+        button.backgroundColor = .white
+        button.tintColor = .customBlack
+        button.titleLabel?.font = .boldSystemFont(ofSize: 17)
+        button.setTitle("Войти", for: .normal)
+        button.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
     
     weak var delegate: AuthViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupView()
+        setConstraints()
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == segueIdentifier {
-            guard let viewController = segue.destination as? WebViewController else {
-                fatalError("Failed to prepare for \(segueIdentifier)")
-            }
-            viewController.delegate = self
-        } else {
-            super.prepare(for: segue, sender: sender)
-        }
+    private func setupView() {
+        view.backgroundColor = .customBlack
+        view.addSubview(unsplashLogoImageView)
+        view.addSubview(loginButton)
+    }
+    
+    @objc
+    private func loginButtonTapped() {
+        let webViewController = WebViewController()
+        webViewController.delegate = self
+        webViewController.modalPresentationStyle = .fullScreen
+        present(webViewController, animated: true)
     }
 }
+
+// MARK: - WebViewControllerDelegate
 
 extension AuthViewController: WebViewControllerDelegate {
     func webViewController(_ vc: WebViewController, didAuthenticateWithCode code: String) {
@@ -32,6 +59,24 @@ extension AuthViewController: WebViewControllerDelegate {
     
     func webViewControllerDidCancel(_ vc: WebViewController) {
         dismiss(animated: true)
+    }
+}
+
+// MARK: - Setting Constraints
+
+extension AuthViewController {
+    private func setConstraints() {
+        NSLayoutConstraint.activate([
+            unsplashLogoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            unsplashLogoImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            unsplashLogoImageView.widthAnchor.constraint(equalToConstant: 60),
+            unsplashLogoImageView.heightAnchor.constraint(equalToConstant: 60),
+            
+            loginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            loginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            loginButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -90),
+            loginButton.heightAnchor.constraint(equalToConstant: 48)
+        ])
     }
 }
 

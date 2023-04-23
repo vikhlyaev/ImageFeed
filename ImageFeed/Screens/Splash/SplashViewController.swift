@@ -10,7 +10,6 @@ final class SplashViewController: UIViewController {
         return imageView
     }()
     
-    private let segueIdentifier = "ShowAuthenticationScreenSegueIdentifier"
     private let oauthService = OAuthService()
     private let oauthTokenStorage = OAuthTokenStorage()
     private let profileService = ProfileService.shared
@@ -51,10 +50,7 @@ final class SplashViewController: UIViewController {
         if let token = oauthTokenStorage.token {
             fetchProfile(token: token)
         } else {
-            let storyboard = UIStoryboard(name: "Main", bundle: .main)
-            guard
-                let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController
-            else { return }
+            let authViewController = AuthViewController()
             authViewController.delegate = self
             authViewController.modalPresentationStyle = .fullScreen
             present(authViewController, animated: true)
