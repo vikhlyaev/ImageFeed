@@ -43,8 +43,7 @@ final class AuthViewController: UIViewController {
     
     @objc
     private func loginButtonTapped() {
-        let webViewController = WebViewController()
-        webViewController.delegate = self
+        let webViewController = ModuleBuilder.makeWebModule(delegate: self)
         webViewController.modalPresentationStyle = .fullScreen
         present(webViewController, animated: true)
     }
