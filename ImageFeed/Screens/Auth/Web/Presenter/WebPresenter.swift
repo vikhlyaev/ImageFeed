@@ -4,25 +4,10 @@ final class WebPresenter {
     
     weak var viewInput: WebViewInput?
     
-    private func makeRequest() throws -> URLRequest {
-        guard var urlComponents = URLComponents(string: AuthConfiguration.standart.authorizeURLString) else {
-            throw AppError.Network.badRequest
-        }
-        
-        urlComponents.queryItems = [
-            URLQueryItem(name: "client_id", value: AuthConfiguration.standart.accessKey),
-            URLQueryItem(name: "redirect_uri", value: AuthConfiguration.standart.redirectURI),
-            URLQueryItem(name: "response_type", value: "code"),
-            URLQueryItem(name: "scope", value: AuthConfiguration.standart.accessScope)
-        ]
-        
-        guard let url = urlComponents.url else {
-            throw AppError.Network.badRequest
-        }
-        
-        didUpdateProgressValue(0)
-        
-        return URLRequest(url: url)
+    private let authHelper: AuthHelper
+    
+    init(authHelper: AuthHelper) {
+        self.authHelper = authHelper
     }
     
     private func shouldHideProgress(for value: Float) -> Bool {
@@ -35,8 +20,9 @@ final class WebPresenter {
 extension WebPresenter: WebViewOutput {
     func viewIsReady() {
         do {
-            let request = try makeRequest()
+            let request = try authHelper.authRequest()
             viewInput?.load(on: request)
+            didUpdateProgressValue(0)
         } catch {
             viewInput?.showErrorAlert()
         }
@@ -51,12 +37,6 @@ extension WebPresenter: WebViewOutput {
     }
     
     func fetchCode(from url: URL) -> String? {
-        guard let urlComponents = URLComponents(string: url.absoluteString),
-              urlComponents.path == "/oauth/authorize/native",
-              let items = urlComponents.queryItems,
-              let codeItem = items.first(where: { $0.name == "code" }),
-              let code = codeItem.value
-        else { return nil }
-        return code
+        authHelper.code(from: url)
     }
 }
