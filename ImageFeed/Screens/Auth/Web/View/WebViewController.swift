@@ -8,6 +8,17 @@ protocol WebViewControllerDelegate: AnyObject {
 
 final class WebViewController: UIViewController {
     
+    static func clean() {
+        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
+            records.forEach { record in
+                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+            }
+        }
+    }
+    
+    // MARK: - UI
+    
     private lazy var webView: WKWebView = {
         let webView = WKWebView()
         webView.translatesAutoresizingMaskIntoConstraints = false
@@ -31,17 +42,22 @@ final class WebViewController: UIViewController {
     }()
     
     private var estimatedProgressObservation: NSKeyValueObservation?
+    
     private let authService = OAuthService()
     
     weak var delegate: WebViewControllerDelegate?
     
-    static func clean() {
-        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
-        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
-            records.forEach { record in
-                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
-            }
-        }
+    private var output: WebViewOutput
+    
+    // MARK: - Life Cycle
+    
+    init(output: WebViewOutput) {
+        self.output = output
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func viewDidLoad() {
@@ -49,14 +65,15 @@ final class WebViewController: UIViewController {
         setupView()
         setConstraints()
         setWebViewDelegate()
-        loadAuthorization()
+        output.viewIsReady()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         addObserverProgress()
-        updateProgress()
     }
+    
+    // MARK: - Setup View
     
     private func setupView() {
         view.backgroundColor = .white
@@ -69,38 +86,20 @@ final class WebViewController: UIViewController {
         webView.navigationDelegate = self
     }
     
-    private func prepareRequest() -> URLRequest? {
-        guard
-            var urlComponents = URLComponents(string: Constants.authorizeURLString)
-        else { return nil }
-        urlComponents.queryItems = [
-            URLQueryItem(name: "client_id", value: Constants.accessKey),
-            URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
-            URLQueryItem(name: "response_type", value: "code"),
-            URLQueryItem(name: "scope", value: Constants.accessScope)
-        ]
-        guard let url = urlComponents.url else { return nil }
-        return URLRequest(url: url)
-    }
-    
-    private func loadAuthorization() {
-        guard let request = prepareRequest() else { return }
-        webView.load(request)
-    }
+
+    // MARK: - Progress
     
     private func addObserverProgress() {
         estimatedProgressObservation = webView.observe(
             \.estimatedProgress,
              options: [],
              changeHandler: { [weak self] _, _ in
-                 self?.updateProgress()
+                 guard let self else { return }
+                 self.output.didUpdateProgressValue(self.webView.estimatedProgress)
              })
     }
     
-    private func updateProgress() {
-        progressView.progress = Float(webView.estimatedProgress)
-        progressView.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
-    }
+    // MARK: - Back Button
     
     @objc
     private func backButtonTapped() {
@@ -123,17 +122,33 @@ extension WebViewController: WKNavigationDelegate {
     }
     
     private func code(from navigationAction: WKNavigationAction) -> String? {
-        if
-            let url = navigationAction.request.url,
-            let urlComponents = URLComponents(string: url.absoluteString),
-            urlComponents.path == "/oauth/authorize/native",
-            let items = urlComponents.queryItems,
-            let codeItem = items.first(where: { $0.name == "code" })
-        {
-            return codeItem.value
-        } else {
-            return nil
-        }
+        guard let url = navigationAction.request.url else { return nil }
+        return output.fetchCode(from: url)
+    }
+}
+
+// MARK: - WebViewInput
+
+extension WebViewController: WebViewInput {
+    func load(on request: URLRequest) {
+        webView.load(request)
+    }
+    
+    func setProgressValue(_ newValue: Float) {
+        progressView.progress = newValue
+    }
+
+    func setProgressHidden(_ isHidden: Bool) {
+        progressView.isHidden = isHidden
+    }
+    
+    func showErrorAlert() {
+        let alert = UIAlertController(title: "Что-то пошло не так(",
+                                      message: "Не удалось загрузить страницу",
+                                      preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "ОК", style: .cancel)
+        alert.addAction(cancelAction)
+        present(alert, animated: true)
     }
 }
 
