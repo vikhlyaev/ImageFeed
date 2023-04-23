@@ -9,15 +9,15 @@ extension URLSession {
                         let object = try JSONDecoder().decode(T.self, from: data)
                         completion(.success(object))
                     } catch {
-                        completion(.failure(NetworkError.parsingJsonError(error)))
+                        completion(.failure(AppError.Network.parsingJsonError(error)))
                     }
                 } else {
-                    completion(.failure(NetworkError.httpStatusCode(statusCode)))
+                    completion(.failure(AppError.Network.httpStatusCode(statusCode)))
                 }
             } else if let error = error {
-                completion(.failure(NetworkError.urlRequestError(error)))
+                completion(.failure(AppError.Network.urlRequestError(error)))
             } else {
-                completion(.failure(NetworkError.urlSessionError))
+                completion(.failure(AppError.Network.urlSessionError))
             }
         })
         return task
