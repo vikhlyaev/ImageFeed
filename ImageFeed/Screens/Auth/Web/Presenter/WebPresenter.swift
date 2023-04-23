@@ -5,15 +5,15 @@ final class WebPresenter {
     weak var viewInput: WebViewInput?
     
     private func makeRequest() throws -> URLRequest {
-        guard var urlComponents = URLComponents(string: Constants.authorizeURLString) else {
+        guard var urlComponents = URLComponents(string: AuthConfiguration.standart.authorizeURLString) else {
             throw AppError.Network.badRequest
         }
         
         urlComponents.queryItems = [
-            URLQueryItem(name: "client_id", value: Constants.accessKey),
-            URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
+            URLQueryItem(name: "client_id", value: AuthConfiguration.standart.accessKey),
+            URLQueryItem(name: "redirect_uri", value: AuthConfiguration.standart.redirectURI),
             URLQueryItem(name: "response_type", value: "code"),
-            URLQueryItem(name: "scope", value: Constants.accessScope)
+            URLQueryItem(name: "scope", value: AuthConfiguration.standart.accessScope)
         ]
         
         guard let url = urlComponents.url else {
