@@ -16,7 +16,7 @@ final class WebViewTests: XCTestCase {
     
     func testPresenterCallsLoadOnRequest() throws {
         // given
-        let presenter = WebPresenter(authHelper: AuthServiceImpl())
+        let presenter = WebPresenter(authService: AuthServiceImpl())
         let viewController = WebViewControllerSpy()
         presenter.viewInput = viewController
         // when
@@ -27,8 +27,7 @@ final class WebViewTests: XCTestCase {
     
     func testProgressVisibleWhenLessThenOne() {
         //given
-        let authHelper = AuthServiceImpl()
-        let presenter = WebPresenter(authHelper: authHelper)
+        let presenter = WebPresenter(authService: AuthServiceImpl())
         let progress: Float = 0.6
         //when
         let shouldHideProgress = presenter.shouldHideProgress(for: progress)
@@ -38,8 +37,7 @@ final class WebViewTests: XCTestCase {
     
     func testProgressVisibleWhenGreaterThanOne() {
         //given
-        let authHelper = AuthServiceImpl()
-        let presenter = WebPresenter(authHelper: authHelper)
+        let presenter = WebPresenter(authService: AuthServiceImpl())
         let progress: Float = 1
         //when
         let shouldHideProgress = presenter.shouldHideProgress(for: progress)
@@ -50,11 +48,11 @@ final class WebViewTests: XCTestCase {
     func testAuthHelperAuthURL() {
         //given
         let configuration = AuthConfiguration.standard
-        let authHelper = AuthServiceImpl(configuration: configuration)
+        let authService = AuthServiceImpl(configuration: configuration)
         
         //when
         guard
-            let request = try? authHelper.authRequest(),
+            let request = try? authService.authRequest(),
             let url = request.url
         else {
             return
@@ -73,7 +71,7 @@ final class WebViewTests: XCTestCase {
     func testCodeFromURL() {
         // given
         let configuration = AuthConfiguration.standard
-        let authHelper = AuthServiceImpl(configuration: configuration)
+        let authService = AuthServiceImpl(configuration: configuration)
         let urlString = "https://unsplash.com/oauth/authorize/native"
         var urlComponents = URLComponents(string: urlString)
         
@@ -82,7 +80,7 @@ final class WebViewTests: XCTestCase {
         guard let url = urlComponents?.url else { return }
         
         // then
-        XCTAssertEqual("test code", authHelper.code(from: url))
+        XCTAssertEqual("test code", authService.code(from: url))
     }
     
 }

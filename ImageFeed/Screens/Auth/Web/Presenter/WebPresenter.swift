@@ -8,7 +8,7 @@ final class WebPresenter {
         self.authService = authService
     }
     
-    private func shouldHideProgress(for value: Float) -> Bool {
+    func shouldHideProgress(for value: Float) -> Bool {
         abs(value - 1.0) <= 0.0001
     }
 }

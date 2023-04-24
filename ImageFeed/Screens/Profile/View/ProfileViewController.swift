@@ -17,6 +17,7 @@ final class ProfileViewController: UIViewController {
         let button = UIButton()
         button.setImage(UIImage(named: "LogOutButton"), for: .normal)
         button.addTarget(self, action: #selector(logOutTapped), for: .touchUpInside)
+        button.accessibilityIdentifier = "LogOutButton"
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
