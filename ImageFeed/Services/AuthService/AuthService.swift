@@ -1,6 +1,6 @@
 import Foundation
 
-protocol AuthHelper {
+protocol AuthService {
     func authRequest() throws -> URLRequest
     func code(from url: URL) -> String?
 }

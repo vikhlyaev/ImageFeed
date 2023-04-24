@@ -1,6 +1,6 @@
 import Foundation
 
-final class AuthHelperImpl {
+final class AuthServiceImpl {
     
     private let configuration: AuthConfiguration
     
@@ -10,7 +10,7 @@ final class AuthHelperImpl {
     
 }
 
-extension AuthHelperImpl: AuthHelper {
+extension AuthServiceImpl: AuthService {
     func authRequest() throws -> URLRequest {
         guard var urlComponents = URLComponents(string: configuration.authorizeURLString) else {
             throw AppError.Network.badRequest

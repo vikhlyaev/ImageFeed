@@ -4,9 +4,9 @@ final class WebPresenter {
     
     weak var viewInput: WebViewInput?
     
-    private let authHelper: AuthHelper
+    private let authHelper: AuthService
     
-    init(authHelper: AuthHelper) {
+    init(authHelper: AuthService) {
         self.authHelper = authHelper
     }
     

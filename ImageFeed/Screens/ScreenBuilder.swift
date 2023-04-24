@@ -4,7 +4,7 @@ final class ScreenBuilder {
     
     static let shared = ScreenBuilder()
     
-    private let authHelper: AuthHelper = AuthHelperImpl()
+    private let authHelper: AuthService = AuthServiceImpl()
     
     private init() {}
     
