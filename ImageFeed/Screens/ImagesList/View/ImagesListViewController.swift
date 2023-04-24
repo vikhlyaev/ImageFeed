@@ -25,7 +25,7 @@ final class ImagesListViewController: UIViewController {
 
     private let output: ImagesListOutput
     
-    // MARK: - Init
+    // MARK: - Life Cycle
     
     init(output: ImagesListOutput) {
         self.output = output

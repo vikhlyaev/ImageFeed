@@ -1,12 +1,13 @@
 import Foundation
 
 final class ImagesListPresenter {
-    
     weak var viewInput: ImagesListInput?
-    
-    private let imagesListService = ImagesListService.shared
-    
+    private let imagesListService: ImagesListService
     private var photos: [Photo] = []
+    
+    init(imagesListService: ImagesListService) {
+        self.imagesListService = imagesListService
+    }
 }
 
 extension ImagesListPresenter: ImagesListOutput {

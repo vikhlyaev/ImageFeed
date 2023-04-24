@@ -1,10 +1,14 @@
 import Foundation
 
 final class ProfilePresenter {
-    private let profileService = ProfileService.shared
-    private let profileImageService = ProfileImageService.shared
-    
     weak var viewInput: ProfileViewInput?
+    private let profileService: ProfileService
+    private let profileImageService: ProfileImageService
+    
+    init(profileService: ProfileService, profileImageService: ProfileImageService) {
+        self.profileService = profileService
+        self.profileImageService = profileImageService
+    }
 }
 
 extension ProfilePresenter: ProfileViewOutput {

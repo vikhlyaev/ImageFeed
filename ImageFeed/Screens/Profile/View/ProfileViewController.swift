@@ -88,7 +88,7 @@ final class ProfileViewController: UIViewController {
         super.viewDidLoad()
         setupView()
         setConstraints()
-        addProfileAvatarObserver()
+        subscribeToProfileImageService()
         output.viewIsReady()
     }
     
@@ -99,7 +99,7 @@ final class ProfileViewController: UIViewController {
         view.addSubview(contentStackView)
     }
     
-    private func addProfileAvatarObserver() {
+    private func subscribeToProfileImageService() {
         profileImageServiceObserver = NotificationCenter.default
             .addObserver(
                 forName: ProfileImageService.DidChangeNotification,
