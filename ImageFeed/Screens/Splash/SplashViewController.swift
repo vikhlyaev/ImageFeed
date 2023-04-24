@@ -14,12 +14,27 @@ final class SplashViewController: UIViewController {
     
     // MARK: - Services
     
-    private let oauthService = OAuthService()
-    private let oauthTokenStorage = OAuthTokenStorage()
-    private let profileService = ProfileService.shared
-    private let profileImageService = ProfileImageService.shared
+    private let oauthService: OAuthService
+    private let oauthTokenStorage: OAuthTokenStorage
+    private let profileService: ProfileService
+    private let profileImageService: ProfileImageService
     
     // MARK: - Life Cycle
+    
+    init(oauthService: OAuthService,
+         oauthTokenStorage: OAuthTokenStorage,
+         profileService: ProfileService,
+         profileImageService: ProfileImageService) {
+        self.oauthService = oauthService
+        self.oauthTokenStorage = oauthTokenStorage
+        self.profileService = profileService
+        self.profileImageService = profileImageService
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
