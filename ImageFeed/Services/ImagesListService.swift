@@ -85,7 +85,7 @@ final class ImagesListService {
         task.resume()
     }
     
-    func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
+    func changeLike(photoId: String, isLiked: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
         assert(Thread.isMainThread)
         
         let сompletionOnMainQueue: (Result<Void, Error>) -> Void = { result in
@@ -94,7 +94,7 @@ final class ImagesListService {
             }
         }
         
-        guard let request = prepareRequest(with: photoId, and: isLike) else { return }
+        guard let request = prepareRequest(with: photoId, and: isLiked) else { return }
         let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<UnsplashResult, Error>) in
             guard let self else { return }
             switch result {
