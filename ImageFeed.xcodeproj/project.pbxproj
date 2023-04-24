@@ -47,6 +47,9 @@
 		0ADB6E0D29F02DF400EBE31F /* UIColor + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADB6E0C29F02DF400EBE31F /* UIColor + Extensions.swift */; };
 		0ADB6E1329F12C1300EBE31F /* Array + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADB6E1229F12C1300EBE31F /* Array + Extensions.swift */; };
 		0ADB6E1529F1324600EBE31F /* ImagesListCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADB6E1429F1324600EBE31F /* ImagesListCellDelegate.swift */; };
+		0AE23E1029F697AD00FFFC03 /* ProfilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE23E0F29F697AD00FFFC03 /* ProfilePresenter.swift */; };
+		0AE23E1229F697BC00FFFC03 /* ProfileViewOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE23E1129F697BC00FFFC03 /* ProfileViewOutput.swift */; };
+		0AE23E1429F697C600FFFC03 /* ProfileViewInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE23E1329F697C600FFFC03 /* ProfileViewInput.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -100,6 +103,9 @@
 		0ADB6E0C29F02DF400EBE31F /* UIColor + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor + Extensions.swift"; sourceTree = "<group>"; };
 		0ADB6E1229F12C1300EBE31F /* Array + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array + Extensions.swift"; sourceTree = "<group>"; };
 		0ADB6E1429F1324600EBE31F /* ImagesListCellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCellDelegate.swift; sourceTree = "<group>"; };
+		0AE23E0F29F697AD00FFFC03 /* ProfilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePresenter.swift; sourceTree = "<group>"; };
+		0AE23E1129F697BC00FFFC03 /* ProfileViewOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewOutput.swift; sourceTree = "<group>"; };
+		0AE23E1329F697C600FFFC03 /* ProfileViewInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewInput.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -262,6 +268,9 @@
 			isa = PBXGroup;
 			children = (
 				0A3BFD4129CF73CC00A318BF /* ProfileViewController.swift */,
+				0AE23E0F29F697AD00FFFC03 /* ProfilePresenter.swift */,
+				0AE23E1129F697BC00FFFC03 /* ProfileViewOutput.swift */,
+				0AE23E1329F697C600FFFC03 /* ProfileViewInput.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -458,6 +467,7 @@
 				0A23C37429F59DF80001F8BA /* WebViewOutput.swift in Sources */,
 				0A23C37E29F5B1AA0001F8BA /* Secrets.swift in Sources */,
 				0ADB6DFB29EED5FD00EBE31F /* Photo.swift in Sources */,
+				0AE23E1029F697AD00FFFC03 /* ProfilePresenter.swift in Sources */,
 				0A5AF00529E2FEC9006DD5D7 /* Profile.swift in Sources */,
 				0ADB6E1529F1324600EBE31F /* ImagesListCellDelegate.swift in Sources */,
 				0ADB6DF929EED58E00EBE31F /* ImagesListService.swift in Sources */,
@@ -469,6 +479,7 @@
 				0A714C1629DD98AE007D76C5 /* OAuthService.swift in Sources */,
 				0A41D38629E554DC00FE0A0F /* URLSession + Extensions.swift in Sources */,
 				0ADB6E1329F12C1300EBE31F /* Array + Extensions.swift in Sources */,
+				0AE23E1429F697C600FFFC03 /* ProfileViewInput.swift in Sources */,
 				0A714C2529DE6E8B007D76C5 /* OAuthTokenResponseBody.swift in Sources */,
 				0A714C2329DDDF82007D76C5 /* SplashViewController.swift in Sources */,
 				0A23C37829F59FC70001F8BA /* ModuleBuilder.swift in Sources */,
@@ -489,6 +500,7 @@
 				0A5AF00329E2FB79006DD5D7 /* ProfileResult.swift in Sources */,
 				0A5AF00129E2FAE2006DD5D7 /* ProfileService.swift in Sources */,
 				0A23C38329F5B4750001F8BA /* AuthHelperImpl.swift in Sources */,
+				0AE23E1229F697BC00FFFC03 /* ProfileViewOutput.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

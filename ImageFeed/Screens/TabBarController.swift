@@ -23,7 +23,8 @@ final class TabBarController: UITabBarController {
             case .imagesList:
                 return UINavigationController(rootViewController: ImagesListViewController())
             case .profile:
-                return ProfileViewController()
+                let profileViewController = ModuleBuilder.shared.makeProfileModule()
+                return profileViewController
             }
         }
         

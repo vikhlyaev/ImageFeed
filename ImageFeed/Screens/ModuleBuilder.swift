@@ -16,6 +16,13 @@ final class ModuleBuilder {
         return vc
     }
     
+    func makeProfileModule() -> UIViewController {
+        let presenter = ProfilePresenter()
+        let vc = ProfileViewController(output: presenter)
+        presenter.viewInput = vc
+        return vc
+    }
+    
 }
 
 
