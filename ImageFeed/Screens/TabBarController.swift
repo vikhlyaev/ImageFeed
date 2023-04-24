@@ -21,9 +21,11 @@ final class TabBarController: UITabBarController {
         viewControllers = dataSource.map {
             switch $0 {
             case .imagesList:
-                return UINavigationController(rootViewController: ImagesListViewController())
+                let imagesListViewController = ScreenBuilder.shared.makeImagesListScreen()
+                let navigationController = UINavigationController(rootViewController: imagesListViewController)
+                return navigationController
             case .profile:
-                let profileViewController = ModuleBuilder.shared.makeProfileModule()
+                let profileViewController = ScreenBuilder.shared.makeProfileScreen()
                 return profileViewController
             }
         }
