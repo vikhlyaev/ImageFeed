@@ -2,7 +2,7 @@ import UIKit
 
 final class ImagesListCell: UITableViewCell {
     
-    static let identifier = String(describing: ImagesListCell.self)
+    // MARK: - UI
     
     lazy var cellImageView: UIImageView = {
         let imageView = UIImageView()
@@ -16,6 +16,7 @@ final class ImagesListCell: UITableViewCell {
     lazy var likeButton: UIButton = {
         let button = UIButton(type: .custom)
         button.addTarget(self, action: #selector(likeButtonTapped), for: .touchUpInside)
+        button.accessibilityIdentifier = "LikeButton"
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -30,6 +31,8 @@ final class ImagesListCell: UITableViewCell {
     
     weak var delegate: ImagesListCellDelegate?
     
+    // MARK: - Life Cycle
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupView()
@@ -39,6 +42,8 @@ final class ImagesListCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    // MARK: - Setup UI
     
     override func prepareForReuse() {
         super.prepareForReuse()

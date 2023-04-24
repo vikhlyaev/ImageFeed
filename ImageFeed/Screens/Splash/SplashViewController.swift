@@ -2,6 +2,8 @@ import UIKit
 
 final class SplashViewController: UIViewController {
     
+    // MARK: - UI
+    
     private lazy var logoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "YandexPracticum")
@@ -10,10 +12,29 @@ final class SplashViewController: UIViewController {
         return imageView
     }()
     
-    private let oauthService = OAuthService()
-    private let oauthTokenStorage = OAuthTokenStorage()
-    private let profileService = ProfileService.shared
-    private let profileImageService = ProfileImageService.shared
+    // MARK: - Services
+    
+    private let oauthService: OAuthService
+    private let oauthTokenStorage: OAuthTokenStorage
+    private let profileService: ProfileService
+    private let profileImageService: ProfileImageService
+    
+    // MARK: - Life Cycle
+    
+    init(oauthService: OAuthService,
+         oauthTokenStorage: OAuthTokenStorage,
+         profileService: ProfileService,
+         profileImageService: ProfileImageService) {
+        self.oauthService = oauthService
+        self.oauthTokenStorage = oauthTokenStorage
+        self.profileService = profileService
+        self.profileImageService = profileImageService
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -30,6 +51,8 @@ final class SplashViewController: UIViewController {
         setupView()
         setConstraints()
     }
+    
+    // MARK: - Setup UI
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
@@ -39,6 +62,8 @@ final class SplashViewController: UIViewController {
         view.backgroundColor = UIColor(named: "customBlack")
         view.addSubview(logoImageView)
     }
+    
+    // MARK: - Actions
     
     private func switchToTabBarController() {
         guard let window = UIApplication.shared.windows.first else { fatalError("Invalid Configuration") }
@@ -50,8 +75,7 @@ final class SplashViewController: UIViewController {
         if let token = oauthTokenStorage.token {
             fetchProfile(token: token)
         } else {
-            let authViewController = AuthViewController()
-            authViewController.delegate = self
+            let authViewController = ScreenBuilder.shared.makeAuthScreen(with: self)
             authViewController.modalPresentationStyle = .fullScreen
             present(authViewController, animated: true)
         }

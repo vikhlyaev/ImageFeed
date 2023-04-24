@@ -4,6 +4,8 @@ import Kingfisher
 
 final class ProfileViewController: UIViewController {
     
+    // MARK: - UI
+    
     private lazy var photoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -15,6 +17,7 @@ final class ProfileViewController: UIViewController {
         let button = UIButton()
         button.setImage(UIImage(named: "LogOutButton"), for: .normal)
         button.addTarget(self, action: #selector(logOutTapped), for: .touchUpInside)
+        button.accessibilityIdentifier = "LogOutButton"
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -67,72 +70,78 @@ final class ProfileViewController: UIViewController {
         return stackView
     }()
     
-    private let profileService = ProfileService.shared
-    private let profileImageService = ProfileImageService.shared
-    
     private var profileImageServiceObserver: NSObjectProtocol?
+    
+    private let output: ProfileViewOutput
+    
+    // MARK: - Life Cycle
+    
+    init(output: ProfileViewOutput) {
+        self.output = output
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
         setConstraints()
-        addProfileAvatarObserver()
-        updateUI(from: profileService.profile)
-        updateAvatar()
+        subscribeToProfileImageService()
+        output.viewIsReady()
     }
+    
+    // MARK: - Setup UI
     
     private func setupView() {
         view.backgroundColor = UIColor(named: "customBlack")
         view.addSubview(contentStackView)
     }
     
-    private func updateUI(from profile: Profile?) {
-        guard let profile else { return }
-        nameLabel.text = profile.name
-        usernameLabel.text = profile.loginName
-        infoLabel.text = profile.bio
-    }
-    
-    private func addProfileAvatarObserver() {
+    private func subscribeToProfileImageService() {
         profileImageServiceObserver = NotificationCenter.default
             .addObserver(
                 forName: ProfileImageService.DidChangeNotification,
                 object: nil,
                 queue: .main
             ) { [weak self] _ in
-                self?.updateAvatar()
+                self?.output.didUpdateAvatar()
             }
     }
     
-    private func updateAvatar() {
-        guard
-            let profileImageURL = profileImageService.avatarURL,
-            let url = URL(string: profileImageURL)
-        else { return }
+    @objc
+    private func logOutTapped() {
+        output.didLogOutButtonTapped()
+    }
+}
+
+// MARK: - ProfileViewInput
+
+extension ProfileViewController: ProfileViewInput {
+    func updateUI(from profile: Profile) {
+        nameLabel.text = profile.name
+        usernameLabel.text = profile.loginName
+        infoLabel.text = profile.bio
+    }
+    
+    func updateAvatar(with url: URL) {
         let processor = RoundCornerImageProcessor(cornerRadius: 35)
         photoImageView.kf.setImage(with: url, options: [.processor(processor)])
     }
     
-    private func showLogOutAlert() {
+    func showLogOutAlert() {
         let alert = UIAlertController(title: "Пока, пока!", message: "Уверены что хотите выйти?", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "Да", style: .default) { _ in
-            WebViewController.clean()
-            OAuthTokenStorage.clean()
-            ImagesListService.shared.clean()
-            ProfileImageService.shared.clean()
-            ProfileService.shared.clean()
+        let okAction = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
+            self?.output.cleanServices()
             guard let window = UIApplication.shared.windows.first else { fatalError("Invalid Configuration") }
-            window.rootViewController = SplashViewController()
+            window.rootViewController = ScreenBuilder.shared.makeSplashScreen()
         }
         let noAction = UIAlertAction(title: "Нет", style: .cancel)
         alert.addAction(okAction)
         alert.addAction(noAction)
         present(alert, animated: true)
-    }
-    
-    @objc
-    private func logOutTapped() {
-        showLogOutAlert()
     }
 }
 

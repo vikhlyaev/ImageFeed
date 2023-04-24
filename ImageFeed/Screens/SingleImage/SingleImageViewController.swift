@@ -3,6 +3,8 @@ import Kingfisher
 
 final class SingleImageViewController: UIViewController {
     
+    // MARK: - UI
+    
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.bounces = false
@@ -24,6 +26,7 @@ final class SingleImageViewController: UIViewController {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(named: "BackButton"), for: .normal)
         button.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        button.accessibilityIdentifier = "BackButton"
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -44,12 +47,16 @@ final class SingleImageViewController: UIViewController {
         }
     }
     
+    // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
         setConstraints()
         setDelegates()
     }
+    
+    // MARK: - Setup UI
     
     private func setupView() {
         view.backgroundColor = .customBlack
@@ -62,6 +69,8 @@ final class SingleImageViewController: UIViewController {
     private func setDelegates() {
         scrollView.delegate = self
     }
+    
+    // MARK: - Actions
     
     private func setImage() {
         guard

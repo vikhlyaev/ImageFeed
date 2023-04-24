@@ -1,10 +1,8 @@
 import UIKit
 
-protocol AuthViewControllerDelegate: AnyObject {
-    func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String)
-}
-
 final class AuthViewController: UIViewController {
+    
+    // MARK: - UI
     
     private lazy var unsplashLogoImageView: UIImageView = {
         let imageView = UIImageView()
@@ -23,11 +21,14 @@ final class AuthViewController: UIViewController {
         button.titleLabel?.font = .boldSystemFont(ofSize: 17)
         button.setTitle("Войти", for: .normal)
         button.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+        button.accessibilityIdentifier = "Authenticate"
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
     weak var delegate: AuthViewControllerDelegate?
+    
+    // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,8 +44,7 @@ final class AuthViewController: UIViewController {
     
     @objc
     private func loginButtonTapped() {
-        let webViewController = WebViewController()
-        webViewController.delegate = self
+        let webViewController = ScreenBuilder.shared.makeWebScreen(delegate: self)
         webViewController.modalPresentationStyle = .fullScreen
         present(webViewController, animated: true)
     }

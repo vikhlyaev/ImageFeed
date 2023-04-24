@@ -15,7 +15,7 @@ final class ImagesListService {
     private func prepareRequest(with page: Int) -> URLRequest? {
         guard
             let token = OAuthTokenStorage().token,
-            var urlComponents = URLComponents(string: Constants.baseURLString)
+            var urlComponents = URLComponents(string: AuthConfiguration.standard.baseURLString)
         else { return nil }
         urlComponents.path = "/photos"
         urlComponents.queryItems = [
@@ -32,7 +32,7 @@ final class ImagesListService {
     private func prepareRequest(with photoId: String, and isLike: Bool) -> URLRequest? {
         guard
             let token = OAuthTokenStorage().token,
-            var urlComponents = URLComponents(string: Constants.baseURLString)
+            var urlComponents = URLComponents(string: AuthConfiguration.standard.baseURLString)
         else { return nil }
         urlComponents.path = "/photos/\(photoId)/like"
         guard let url = urlComponents.url else { return nil }
@@ -85,7 +85,7 @@ final class ImagesListService {
         task.resume()
     }
     
-    func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
+    func changeLike(photoId: String, isLiked: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
         assert(Thread.isMainThread)
         
         let сompletionOnMainQueue: (Result<Void, Error>) -> Void = { result in
@@ -94,7 +94,7 @@ final class ImagesListService {
             }
         }
         
-        guard let request = prepareRequest(with: photoId, and: isLike) else { return }
+        guard let request = prepareRequest(with: photoId, and: isLiked) else { return }
         let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<UnsplashResult, Error>) in
             guard let self else { return }
             switch result {
