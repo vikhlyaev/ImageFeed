@@ -1,11 +1,6 @@
 import UIKit
 import WebKit
 
-protocol WebViewControllerDelegate: AnyObject {
-    func webViewController(_ vc: WebViewController, didAuthenticateWithCode code: String)
-    func webViewControllerDidCancel(_ vc: WebViewController)
-}
-
 final class WebViewController: UIViewController {
     
     static func clean() {
@@ -42,11 +37,7 @@ final class WebViewController: UIViewController {
     }()
     
     private var estimatedProgressObservation: NSKeyValueObservation?
-    
-    private let authService = OAuthService()
-    
     weak var delegate: WebViewControllerDelegate?
-    
     private var output: WebViewOutput
     
     // MARK: - Life Cycle
