@@ -1,10 +1,8 @@
 import UIKit
 
-protocol AuthViewControllerDelegate: AnyObject {
-    func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String)
-}
-
 final class AuthViewController: UIViewController {
+    
+    // MARK: - UI
     
     private lazy var unsplashLogoImageView: UIImageView = {
         let imageView = UIImageView()
@@ -28,6 +26,8 @@ final class AuthViewController: UIViewController {
     }()
     
     weak var delegate: AuthViewControllerDelegate?
+    
+    // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
