@@ -4,10 +4,10 @@ final class WebPresenter {
     
     weak var viewInput: WebViewInput?
     
-    private let authHelper: AuthService
+    private let authService: AuthService
     
-    init(authHelper: AuthService) {
-        self.authHelper = authHelper
+    init(authService: AuthService) {
+        self.authService = authService
     }
     
     func shouldHideProgress(for value: Float) -> Bool {
@@ -20,7 +20,7 @@ final class WebPresenter {
 extension WebPresenter: WebViewOutput {
     func viewIsReady() {
         do {
-            let request = try authHelper.authRequest()
+            let request = try authService.authRequest()
             viewInput?.load(on: request)
             didUpdateProgressValue(0)
         } catch {
@@ -37,6 +37,6 @@ extension WebPresenter: WebViewOutput {
     }
     
     func fetchCode(from url: URL) -> String? {
-        authHelper.code(from: url)
+        authService.code(from: url)
     }
 }

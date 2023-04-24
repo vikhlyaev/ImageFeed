@@ -4,12 +4,12 @@ final class ScreenBuilder {
     
     static let shared = ScreenBuilder()
     
-    private let authHelper: AuthService = AuthServiceImpl()
+    private let authService: AuthService = AuthServiceImpl()
     
     private init() {}
     
     func makeWebScreen(delegate: WebViewControllerDelegate) -> UIViewController {
-        let presenter = WebPresenter(authHelper: authHelper)
+        let presenter = WebPresenter(authService: authService)
         let vc = WebViewController(output: presenter)
         presenter.viewInput = vc
         vc.delegate = delegate
