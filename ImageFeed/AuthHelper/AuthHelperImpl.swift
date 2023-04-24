@@ -4,7 +4,7 @@ final class AuthHelperImpl {
     
     private let configuration: AuthConfiguration
     
-    init(configuration: AuthConfiguration = AuthConfiguration.standard) {
+    init(configuration: AuthConfiguration = .standard) {
         self.configuration = configuration
     }
     
