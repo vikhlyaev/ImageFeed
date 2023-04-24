@@ -1,16 +1,14 @@
 import Foundation
 
 final class WebPresenter {
-    
     weak var viewInput: WebViewInput?
-    
     private let authService: AuthService
     
     init(authService: AuthService) {
         self.authService = authService
     }
     
-    func shouldHideProgress(for value: Float) -> Bool {
+    private func shouldHideProgress(for value: Float) -> Bool {
         abs(value - 1.0) <= 0.0001
     }
 }
