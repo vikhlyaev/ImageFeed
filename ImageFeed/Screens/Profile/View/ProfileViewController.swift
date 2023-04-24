@@ -135,7 +135,7 @@ extension ProfileViewController: ProfileViewInput {
         let okAction = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
             self?.output.cleanServices()
             guard let window = UIApplication.shared.windows.first else { fatalError("Invalid Configuration") }
-            window.rootViewController = SplashViewController()
+            window.rootViewController = ScreenBuilder.shared.makeSplashScreen()
         }
         let noAction = UIAlertAction(title: "Нет", style: .cancel)
         alert.addAction(okAction)

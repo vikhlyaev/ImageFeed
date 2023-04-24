@@ -110,9 +110,8 @@ extension ImagesListViewController: UITableViewDataSource {
 
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let viewController = SingleImageViewController()
         let photo = output.didRequestPhoto(by: indexPath.row)
-        viewController.imageUrl = photo.largeImageURL
+        let viewController = ScreenBuilder.shared.makeSingleImageViewController(with: photo.largeImageURL)
         viewController.modalPresentationStyle = .fullScreen
         present(viewController, animated: true)
     }

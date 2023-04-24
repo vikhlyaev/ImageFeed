@@ -75,8 +75,7 @@ final class SplashViewController: UIViewController {
         if let token = oauthTokenStorage.token {
             fetchProfile(token: token)
         } else {
-            let authViewController = AuthViewController()
-            authViewController.delegate = self
+            let authViewController = ScreenBuilder.shared.makeAuthScreen(with: self)
             authViewController.modalPresentationStyle = .fullScreen
             present(authViewController, animated: true)
         }
